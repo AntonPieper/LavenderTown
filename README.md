@@ -1,5 +1,6 @@
 # LavenderTown
 Anton Pieper
 Azat Erol
-# LavenderTown
+Kilian Schlosser
+Christian Schögin
 # LavenderTown
