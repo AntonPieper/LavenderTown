@@ -12,7 +12,7 @@ Christian Schögin
 
 ## Roles
 
-[Product Owner (Kilian))](https://github.com/Firnin)
+[Product Owner (Kilian)](https://github.com/Firnin)
 
 [Scrum Master (Christian)](https://github.com/ChristianSchoegin)
 
