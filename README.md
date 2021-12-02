@@ -12,12 +12,12 @@ Christian Schögin
 
 ## Roles
 
-[Product Owner](https://github.com/Firnin)
+[Product Owner (Kilian))](https://github.com/Firnin)
 
-[Scrum Master](https://github.com/ChristianSchoegin)
+[Scrum Master (Christian)](https://github.com/ChristianSchoegin)
 
-[Developer](https://github.com/AntonPieper)
+[Developer (Anton)](https://github.com/AntonPieper)
 
-[Developer](https://github.com/4zatero7)
+[Developer (Azat)](https://github.com/4zatero7)
 
-[Developer](https://github.com/Kemaleb98)
+[Developer (Kemal)](https://github.com/Kemaleb98)
