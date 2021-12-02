@@ -6,6 +6,8 @@
 
 # LavenderTown
 
+Battleship game.
+
 ## Roles
 
 [`Product Owner` (Kilian Schlosser)](https://github.com/Firnin)
