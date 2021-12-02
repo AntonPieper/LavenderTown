@@ -1,12 +1,15 @@
-<p align="center"><img src="https://github.com/AntonPieper/LavenderTown/blob/main/english-lavender-lavandula-angustifolia-garden-design_11716.jpeg" width="400"></a></p>
-
 <p align="center">
-<a href="LICENSE"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+<img src="english-lavender-lavandula-angustifolia-garden-design_11716.jpeg" width="400"/>
+</p>
+<p align="center">
+    <a href="LICENSE">
+        <img alt="License" src="https://img.shields.io/github/license/AntonPieper/LavenderTown">
+    </a>
 </p>
 
-# LavenderTown
+# Lavender Town
 
-Battleship game.
+A battleship game.
 
 ## Roles
 
