@@ -1,7 +1,7 @@
-#include <ncurses.h>
+#include <curses.h>
 
 int main() {
-  const WINDOW *window = initscr();
+  WINDOW *window = initscr();
 
   do {
     clear();
