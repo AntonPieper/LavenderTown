@@ -9,7 +9,7 @@ int main() {
   if (has_colors() == FALSE) {
     endwin();
     printf("Your Terminal does not support color!\n");
-    exit(1);
+    return 1;
   }
   start_color();
   init_pair(GREET_COLOR, COLOR_YELLOW, COLOR_BLACK);
@@ -26,9 +26,9 @@ int main() {
   mvaddstr(rows - 2, columns / 2 - 5, "Your name?");
   mvaddstr(rows - 1, columns / 2 - 5, "> ");
 
-  attron(COLOR_PAIR(NAME_INPUT_COLOR) | A_ITALIC);
+  attron(COLOR_PAIR(NAME_INPUT_COLOR));
   getnstr(name, 63);
-  attroff(COLOR_PAIR(NAME_INPUT_COLOR) | A_ITALIC);
+  attroff(COLOR_PAIR(NAME_INPUT_COLOR));
 
   move(rows - 2, 0);
   clrtobot();
