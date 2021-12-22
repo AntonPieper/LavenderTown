@@ -29,6 +29,7 @@ int main() {
          "|I| | | | | | | | | | |\n"
          "|J| | | | | | | | | | |\n"
          "________________________\n");
+  move(cursor.y, cursor.x);
 
   refresh(); /* Print it on to the real screen */
   getch();   /* Wait for user input */
@@ -36,4 +37,3 @@ int main() {
 
   return 0;
 }
-
