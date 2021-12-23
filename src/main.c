@@ -41,5 +41,12 @@ moveCursor(1);
 
 
 int moveCursor(int cMoves) {
-
+	while(cMoves) {
+		switch(getch()) {
+		
+		}
+  	move(cursor.y,cursor.x);
+	  refresh();
+	}
+  return 1;
 }
