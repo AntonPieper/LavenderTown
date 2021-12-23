@@ -43,7 +43,18 @@ moveCursor(1);
 int moveCursor(int cMoves) {
 	while(cMoves) {
 		switch(getch()) {
-		
+			case 'a':
+				if(cursor.x >3) cursor.x -= 2;
+				break;
+			case 'd':
+				if(cursor.x < 20) cursor.x += 2;
+				break;
+			case 'w':
+			if(cursor.y > 2) cursor.y -= 1;
+				break;
+			case 's':
+				if(cursor.y < 11) cursor.y += 1;
+				break;
 		}
   	move(cursor.y,cursor.x);
 	  refresh();
