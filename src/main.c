@@ -4,6 +4,9 @@ struct setCoord {
   int y, x;
 };
 
+int main() {
+  initscr(); /* Start curses mode 		  */
+
 struct setCoord cursor;
 
 int main() {
@@ -29,6 +32,7 @@ int main() {
          "|I| | | | | | | | | | |\n"
          "|J| | | | | | | | | | |\n"
          "________________________\n");
+
   move(cursor.y, cursor.x);
 
   refresh(); /* Print it on to the real screen */
