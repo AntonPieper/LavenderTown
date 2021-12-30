@@ -9,6 +9,15 @@ endif(UNIX)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
-add_executable (${PROJECT_NAME} main.c grid.c)
+set(SOURCES
+    main.c
+    grid.c
+    random.c
+    vector.c
+    ship.c
+    aabb.c
+)
+
+add_executable (${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} ${CURSES_LIBRARIES})
