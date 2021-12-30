@@ -59,3 +59,10 @@ AABB getOccupiedCells(Ship ship) {
 		default: return (AABB){ship.x, ship.y, ship.x + len, ship.y};
 	}
 }
+Ship *getShipAtPosition(Vector2 position, Ship *ships, int numShips) {
+	for(int i = 0; i < numShips; ++i) {
+		if(pointInside(getOccupiedCells(ships[i]), position))
+			return &ships[i];
+	}
+	return 0;
+}

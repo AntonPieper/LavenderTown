@@ -4,11 +4,12 @@
 #include "aabb.h"
 #include "vector.h"
 
-#define COLOR_CARRIER 1U
-#define COLOR_BATTLESHIP 2U
-#define COLOR_CRUISER 3U
-#define COLOR_SUBMARINE 4U
-#define COLOR_DESTROYER 5U
+#define COLOR_CARRIER 1
+#define COLOR_BATTLESHIP 2
+#define COLOR_CRUISER 3
+#define COLOR_SUBMARINE 4
+#define COLOR_DESTROYER 5
+#define COLOR_INVALID 6
 
 typedef enum Orientation { UP, RIGHT, DOWN, LEFT } Orientation;
 #define ORIENTATIONS 4
@@ -34,5 +35,7 @@ typedef struct Ship {
 } Ship;
 
 AABB getOccupiedCells(Ship ship);
+
+Ship *getShipAtPosition(Vector2 position, Ship *ships, int numShips);
 
 #endif // SRC_SHIP_H_

@@ -14,25 +14,29 @@ Grid *generateGrid(Vector2 size, WINDOW *window) {
 	return grid;
 }
 void drawBox(WINDOW *window, int minX, int minY, int maxX, int maxY) {
-	wmove(window, minY, minX);
-	waddch(window, ACS_ULCORNER);
-	whline(window, 0, maxX - minX - 1);
-	mvwaddch(window, minY, maxX, ACS_URCORNER);
-	wmove(window, maxY, minX);
-	waddch(window, ACS_LLCORNER);
-	whline(window, 0, maxX - minX - 1);
-	mvwaddch(window, maxY, maxX, ACS_LRCORNER);
-	mvwvline(window, minY + 1, minX, 0, maxY - minY - 1);
-	mvwvline(window, minY + 1, maxX, 0, maxY - minY - 1);
+	WINDOW *borderBox =
+		derwin(window, maxY - minY + 1, maxX - minX + 1, minX, minX);
+	wrefresh(window);
+	box(borderBox, 0, 0);
+	delwin(borderBox);
 }
-void drawFilledBox(WINDOW *window, AABB box, int colorCode) {
-	attron(COLOR_PAIR(colorCode));
-	for(int y = box.min.y; y <= box.max.y; ++y)
-		mvwhline(window, y, box.min.x, ' ', box.max.x - box.min.x + 1);
-	attroff(COLOR_PAIR(colorCode));
+
+void drawFilledBox(WINDOW *window, AABB aabb, int colorCode, bool drawOutline) {
+	WINDOW *filledBox =
+		derwin(window, aabb.max.y - aabb.min.y + 1, aabb.max.x - aabb.min.x + 1,
+			   aabb.min.y, aabb.min.x);
+	wrefresh(window);
+	wbkgd(filledBox, COLOR_PAIR(colorCode));
+	if(drawOutline)
+		wborder(filledBox, ACS_CKBOARD, ACS_CKBOARD, ACS_CKBOARD, ACS_CKBOARD,
+				ACS_CKBOARD, ACS_CKBOARD, ACS_CKBOARD, ACS_CKBOARD);
+	mvwprintw(filledBox, aabb.min.y, aabb.min.x, "%d %d %d %d", aabb.min.x,
+			  aabb.min.y, aabb.max.x, aabb.max.y);
+	wrefresh(filledBox);
+	delwin(filledBox);
 }
+
 void drawGrid(Grid *grid) {
-	// box(grid->window, 0, 0);
 	Vector2 cellSize = getGridCellSize(grid);
 	const int maxX = (grid->size.x + 1) * cellSize.x;
 	const int maxY = (grid->size.y + 1) * cellSize.y;
@@ -69,19 +73,26 @@ void drawGrid(Grid *grid) {
 	wrefresh(grid->window);
 }
 
-bool shipIsValid(int shipId, Grid *grid) {
-	Ship ship = grid->ships[shipId];
-	AABB shipCells = getOccupiedCells(ship);
-	if(shipCells.min.x < 0 || shipCells.min.y < 0 ||
-	   shipCells.max.x >= grid->size.x || shipCells.max.y >= grid->size.y)
+bool shipIsValid(Ship *ship, Grid *grid, const int numShips,
+				 Ship *ignoredShip) {
+	AABB shipCells = getOccupiedCells(*ship);
+	if(!isInsideBounds(ship, grid))
 		return false;
 	Ship *const ships = grid->ships;
-	const int numShips = shipId; // Only consider initialized ships
-	for(int i = 0; i < shipId; ++i) {
+	for(int i = 0; i < numShips; ++i) {
+		if(&ships[i] == ignoredShip)
+			continue;
 		if(intersects(shipCells, getOccupiedCells(ships[i])))
 			return false;
 	}
 	return true;
+}
+bool isValidMove(Grid *grid, Ship *currentShip, Ship *newShip) {
+	return shipIsValid(newShip, grid, SHIP_TYPES, currentShip);
+}
+bool isInsideBounds(Ship *ship, Grid *grid) {
+	AABB shipCells = getOccupiedCells(*ship);
+	return inside((AABB){0, 0, grid->size.x - 1, grid->size.y - 1}, shipCells);
 }
 Ship generateShip(Grid *grid, int type) {
 	Ship ship;
@@ -92,19 +103,20 @@ Ship generateShip(Grid *grid, int type) {
 
 	return ship;
 }
+
 Ship *generateShips(Grid *grid) {
 	Ship *const ships = grid->ships;
 	for(int i = 0; i < SHIP_TYPES; ++i) {
 		bool validPosition = true;
 		do {
 			ships[i] = generateShip(grid, i);
-			validPosition = shipIsValid(i, grid);
+			validPosition = shipIsValid(&ships[i], grid, i, 0);
 		} while(!validPosition);
 	}
 	return ships;
 }
 
-void drawShip(Grid *grid, int id) {
+void drawShip(Grid *grid, int id, bool drawOutline) {
 	Ship shipRef = grid->ships[id];
 	Ship ship = shipRef;
 	ship.x += 1;
@@ -112,25 +124,37 @@ void drawShip(Grid *grid, int id) {
 	Vector2 cellSize = getGridCellSize(grid);
 	AABB shipCells = getOccupiedCells(ship);
 	shipCells.max = add(shipCells.max, VECTOR2_ONE);
+
 	shipCells.min = multiply(shipCells.min, cellSize);
 	shipCells.max = multiply(shipCells.max, cellSize);
+
 	shipCells.min.x += 1;
 	shipCells.max.x -= 1;
 	shipCells.max.y -= 1;
 	if(cellSize.y > 1) {
 		shipCells.min.y += 1;
 	}
-	drawFilledBox(grid->window, shipCells, getShipTypeColor(ship.type));
+
+	int color = isValidMove(grid, &grid->ships[id], &grid->ships[id])
+					? getShipTypeColor(ship.type)
+					: COLOR_INVALID;
+
+	drawFilledBox(grid->window, shipCells, color, drawOutline);
 }
 
-void drawShips(Grid *grid) {
+void drawShips(Grid *grid, Ship *highlightedShip) {
 	Vector2 cellSize = getGridCellSize(grid);
 	for(int i = 0; i < SHIP_TYPES; ++i) {
-		drawShip(grid, i);
+		drawShip(grid, i, highlightedShip == &grid->ships[i]);
 	}
 	wrefresh(grid->window);
 }
-
+void drawCursor(Grid *grid, Vector2 cursor) {
+	Vector2 cellSize = getGridCellSize(grid);
+	mvwaddch(grid->window, (cursor.y + 1) * cellSize.y + cellSize.y / 2,
+			 (cursor.x + 1) * cellSize.x + cellSize.x / 2, 'x');
+	wrefresh(grid->window);
+}
 int getGridCellSizeX(Grid *grid) {
 	return (getmaxx(grid->window) - 1) / (grid->size.x + 1);
 }

@@ -16,6 +16,7 @@ set(SOURCES
     vector.c
     ship.c
     aabb.c
+    player.c
 )
 
 add_executable (${PROJECT_NAME} ${SOURCES})
