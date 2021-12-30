@@ -109,7 +109,7 @@ PointerAlignment: Right
 ReferenceAlignment: Pointer
 ReflowComments: true
 ShortNamespaceLines: 1
-SortIncludes: CaseSensitive
+SortIncludes: true
 SortJavaStaticImport: Before
 SortUsingDeclarations: true
 SpaceAfterCStyleCast: false
@@ -127,7 +127,7 @@ SpaceBeforeSquareBrackets: false
 SpaceInEmptyBlock: false
 SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 1
-SpacesInAngles: Never
+SpacesInAngles: false
 SpacesInCStyleCastParentheses: false
 SpacesInConditionalStatement: false
 SpacesInContainerLiterals: true
