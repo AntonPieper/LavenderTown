@@ -7,9 +7,8 @@ struct setCoord {
 struct setCoord cursor;
 
 int main() {
-  initscr(); /* Start curses mode       */
 
-  int x, y;
+  initscr(); /* Start curses mode       */
 
   cursor.y = 2;
   cursor.x = 3;
