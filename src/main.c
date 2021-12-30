@@ -1,11 +1,7 @@
-#include <curses.h>
-#include <stdlib.h>
-
 #include "grid.h"
 #include "random.h"
 #include "ship.h"
 #include "vector.h"
-#include <locale.h>
 
 const int GRID_SIZE = 10;
 
@@ -27,10 +23,10 @@ int main() {
 
 	WINDOW *gridWindow = stdscr;
 	refresh();
-	Grid *grid =
-		generateGrid((Vector2){GRID_SIZE, GRID_SIZE}, gridWindow);
+
+	Grid *grid = generateGrid((Vector2){GRID_SIZE, GRID_SIZE}, gridWindow);
 	Ship *ships = generateShips(grid);
-	// grid->ships[0] = (Ship){RIGHT,0,0,4};
+
 	do {
 		clear();
 		drawGrid(grid);
