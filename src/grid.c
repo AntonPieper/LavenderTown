@@ -99,11 +99,6 @@ Ship *generateShips(Grid *grid) {
 		do {
 			ships[i] = generateShip(grid, i);
 			validPosition = shipIsValid(i, grid);
-			wrefresh(grid->window);
-			mvwprintw(grid->window, 0, 0, "Ship: {%d, %d, %d, %5s}    %7s\n",
-					  ships[i].x, ships[i].y, getShipTypeLength(ships[i].type),
-					  getOrientationName(ships[i].orientation),
-					  validPosition ? "VALID" : "INVALID");
 		} while(!validPosition);
 	}
 	return ships;
