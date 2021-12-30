@@ -1,7 +1,23 @@
 #include <ncurses.h>
 
+struct setCoord {
+  int y, x;
+};
+
 int main() {
   initscr(); /* Start curses mode 		  */
+
+struct setCoord cursor;
+
+int main() {
+  initscr(); /* Start curses mode       */
+
+  int x, y;
+
+  cursor.y = 2;
+  cursor.x = 3;
+  clear();
+  noecho();
 
   printw("________________________\n"
          "| |1|2|3|4|5|6|7|8|9|10|\n"
@@ -17,9 +33,11 @@ int main() {
          "|J| | | | | | | | | | |\n"
          "________________________\n");
 
+  move(cursor.y, cursor.x);
+
   refresh(); /* Print it on to the real screen */
   getch();   /* Wait for user input */
-  endwin();  /* End curses mode		  */
+  endwin();  /* End curses mode     */
 
   return 0;
 }
