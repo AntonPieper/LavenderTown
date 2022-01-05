@@ -104,7 +104,6 @@ PenaltyIndentedWhitespace: 0
 PenaltyReturnTypeOnItsOwnLine: 60
 PointerAlignment: Right
 ReflowComments: true
-ShortNamespaceLines: 1
 SortIncludes: true
 SortJavaStaticImport: Before
 SortUsingDeclarations: true
