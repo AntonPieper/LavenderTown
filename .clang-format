@@ -129,9 +129,6 @@ SpacesInAngles: false
 SpacesInCStyleCastParentheses: false
 SpacesInConditionalStatement: false
 SpacesInContainerLiterals: true
-SpacesInLineCommentPrefix:
-  Minimum: 1
-  Maximum: 1
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
 Standard: Latest
