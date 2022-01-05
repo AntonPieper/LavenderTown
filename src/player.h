@@ -5,7 +5,6 @@
 
 typedef struct Player {
 	char *name;
-	bool requestsRedraw;
 
 	bool isHoldingShip;
 	int currentShip;
@@ -16,6 +15,13 @@ typedef struct Player {
 	Ship ships[SHIP_TYPES];
 } Player;
 
+typedef enum State {
+	IDLE = 0U,
+	REQUEST_REDRAW = 1U,
+	NEXT_STEP = 2U,
+	QUIT = 4U
+} State;
+
 Player createPlayer(char *name, Grid *grid, Ship *ships);
 
 char *getPlayerName(WINDOW *window);
@@ -23,6 +29,6 @@ char *getPlayerName(WINDOW *window);
 void selectShip(Player *player, int index);
 void deselectShip(Player *player);
 
-void handleInput(Player *player, int input);
+State handleInput(Player *player, int input);
 
 #endif // SRC_PLAYER_H_

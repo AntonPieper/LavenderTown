@@ -3,6 +3,7 @@
 #include "grid.h"
 #include "ship.h"
 #include "vector.h"
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -37,49 +38,39 @@ void selectShip(Player *player, int index) {
 
 void deselectShip(Player *player) { player->isHoldingShip = false; }
 
-void handleResize(Player *player);
-void handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
-					int dy);
-void handleRotateLeft(Player *player, Grid *grid, Ship *currentShip);
-void handleRotateRight(Player *player, Grid *grid, Ship *currentShip);
-void handleShipSelection(Player *player, int input);
-void handleHoldingShip(Player *player, Grid *grid, Ship *currentShip);
-void handleQuit();
+State handleResize();
+State handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
+					 int dy);
+State handleRotateLeft(Player *player, Grid *grid, Ship *currentShip);
+State handleRotateRight(Player *player, Grid *grid, Ship *currentShip);
+State handleShipSelection(Player *player, int input);
+State handleHoldingShip(Player *player, Grid *grid, Ship *currentShip);
+State handleNextStep();
+State handleQuit();
 
-void handleInput(Player *player, int input) {
+State handleInput(Player *player, int input) {
 	Ship *currentShip = &player->ships[player->currentShip];
 	Grid *grid = player->grid;
+	input = tolower(input);
 	switch(input) {
-		case ERR: return;
+		case ERR: return IDLE;
 		case KEY_RESIZE: return handleResize(player);
-		case 'W':
 		case 'w':
 		case 'k':
-		case 'K':
 		case KEY_UP: return handleMovement(player, grid, currentShip, 0, -1);
-		case 'S':
 		case 's':
-		case 'J':
 		case 'j':
 		case KEY_DOWN: return handleMovement(player, grid, currentShip, 0, 1);
-		case 'A':
 		case 'a':
-		case 'H':
 		case 'h':
 		case KEY_LEFT: return handleMovement(player, grid, currentShip, -1, 0);
-		case 'D':
 		case 'd':
-		case 'L':
 		case 'l':
 		case KEY_RIGHT: return handleMovement(player, grid, currentShip, 1, 0);
-		case 'U':
 		case 'u':
-		case 'Q':
 		case 'q':
 		case KEY_PREVIOUS: return handleRotateLeft(player, grid, currentShip);
-		case 'I':
 		case 'i':
-		case 'E':
 		case 'e':
 		case KEY_NEXT: return handleRotateRight(player, grid, currentShip);
 		case '1':
@@ -90,16 +81,16 @@ void handleInput(Player *player, int input) {
 		case ' ':
 		case KEY_HOME: return handleHoldingShip(player, grid, currentShip);
 		case '\n':
-		case KEY_ENTER:
+		case KEY_ENTER: return handleNextStep();
 		case KEY_EXIT:
 		case KEY_CANCEL: return handleQuit();
-		default: return;
+		default: return IDLE;
 	}
 }
 
-void handleResize(Player *player) { player->requestsRedraw = true; }
-void handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
-					int dy) {
+State handleResize() { return REQUEST_REDRAW; }
+State handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
+					 int dy) {
 	if(player->isHoldingShip) {
 		Ship newShip = *currentShip;
 		newShip.x += dx;
@@ -121,37 +112,39 @@ void handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
 			player->cursor.y += dy;
 		}
 	}
-	player->requestsRedraw = true;
+	return REQUEST_REDRAW;
 }
 
-void handleRotateLeft(Player *player, Grid *grid, Ship *currentShip) {
+State handleRotateLeft(Player *player, Grid *grid, Ship *currentShip) {
 	if(player->isHoldingShip) {
 		Ship newShip = *currentShip;
 		newShip.orientation = (newShip.orientation + 1) % ORIENTATIONS;
 		if(isInsideBounds(&newShip, getGridBounds(grid)))
 			currentShip->orientation = newShip.orientation;
-		player->requestsRedraw = true;
+		return REQUEST_REDRAW;
 	}
+	return IDLE;
 }
-void handleRotateRight(Player *player, Grid *grid, Ship *currentShip) {
+State handleRotateRight(Player *player, Grid *grid, Ship *currentShip) {
 	if(player->isHoldingShip) {
 		Ship newShip = *currentShip;
 		newShip.orientation = (newShip.orientation - 1) % ORIENTATIONS;
 		if(isInsideBounds(&newShip, getGridBounds(grid)))
 			currentShip->orientation = newShip.orientation;
-		player->requestsRedraw = true;
+		return REQUEST_REDRAW;
 	}
+	return IDLE;
 }
-void handleShipSelection(Player *player, int input) {
+State handleShipSelection(Player *player, int input) {
 	selectShip(player, input - '1');
-	player->requestsRedraw = true;
+	return REQUEST_REDRAW;
 }
-void handleHoldingShip(Player *player, Grid *grid, Ship *currentShip) {
+State handleHoldingShip(Player *player, Grid *grid, Ship *currentShip) {
 	if(player->isHoldingShip) {
 		if(isValidMove(player->ships, getGridBounds(grid), currentShip,
 					   currentShip)) {
 			player->isHoldingShip = false;
-			player->requestsRedraw = true;
+			return REQUEST_REDRAW;
 		}
 	} else {
 		int foundShip =
@@ -159,11 +152,10 @@ void handleHoldingShip(Player *player, Grid *grid, Ship *currentShip) {
 		if(foundShip != -1) {
 			selectShip(player, foundShip);
 			player->isHoldingShip = true;
-			player->requestsRedraw = true;
+			return REQUEST_REDRAW;
 		}
 	}
+	return IDLE;
 }
-void handleQuit() {
-	endwin();
-	exit(0);
-}
+State handleNextStep() { return NEXT_STEP | REQUEST_REDRAW; }
+State handleQuit() { return QUIT; }
