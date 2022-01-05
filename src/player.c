@@ -114,7 +114,8 @@ void handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
 		Vector2 newCursor = player->cursor;
 		newCursor.x += dx;
 		newCursor.y += dy;
-		if(pointInside((AABB){0, 0, grid->size}, newCursor)) {
+		if(pointInside((AABB){0, 0, grid->size.x - 1, grid->size.y - 1},
+					   newCursor)) {
 			player->cursor.x += dx;
 			player->cursor.y += dy;
 		}
