@@ -36,6 +36,18 @@ typedef struct Ship {
 
 AABB getOccupiedCells(Ship ship);
 
+///
+/// \returns found ship, else NULL
+///
 Ship *getShipAtPosition(Vector2 position, Ship *ships, int numShips);
+///
+/// \returns found ship, else -1
+///
+int getShipIndexAtPosition(Vector2 position, Ship *ships, int numShips);
+
+bool shipIsValid(Ship *ship, Ship *ships, int numShips, AABB bounds,
+				 Ship *ignoredShip);
+bool isValidMove(Ship *ships, AABB bounds, Ship *currentShip, Ship *newShip);
+bool isInsideBounds(Ship *ship, AABB bounds);
 
 #endif // SRC_SHIP_H_

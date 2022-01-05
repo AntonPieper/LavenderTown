@@ -8,14 +8,9 @@
 typedef struct Grid {
 	Vector2 size;
 	WINDOW *window;
-	Ship ships[SHIP_TYPES];
 } Grid;
 
 Grid *generateGrid(Vector2 size, WINDOW *window);
-
-bool shipIsValid(Ship *ship, Grid *grid, int numShips, Ship *ignoredShip);
-bool isValidMove(Grid *grid, Ship *currentShip, Ship *newShip);
-bool isInsideBounds(Ship *ship, Grid *grid);
 
 Ship *generateShips(Grid *grid);
 
@@ -26,8 +21,10 @@ int getGridCellSizeY(Grid *grid);
 
 Vector2 getGridCellSize(Grid *grid);
 
-void drawShip(Grid *grid, int id, bool drawOutline);
-void drawShips(Grid *grid, Ship *highlightedShip);
+AABB getGridBounds(Grid *grid);
+
+void drawShip(Ship *shipRef, Grid *grid, Ship *ships, bool drawOutline);
+void drawShips(Ship *ships, Grid *grid, int highlightedShip);
 
 void drawCursor(Grid *grid, Vector2 cursor);
 

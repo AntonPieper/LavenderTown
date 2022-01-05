@@ -29,29 +29,32 @@ int main() {
 	refresh();
 
 	Grid *grid = generateGrid((Vector2){GRID_SIZE, GRID_SIZE}, gridWindow);
-	Ship *ships = generateShips(grid);
-	Player currentPlayer = createPlayer(getPlayerName(gridWindow), grid);
+	Player player0 =
+		createPlayer(getPlayerName(gridWindow), grid, generateShips(grid));
+	Player player1 =
+		createPlayer(getPlayerName(gridWindow), grid, generateShips(grid));
+
+	Player *currentPlayer = &player0;
 
 	int columns = getmaxx(stdscr);
 	int rows = getmaxy(stdscr);
 	int currentInput = 0;
-	selectShip(&currentPlayer, &ships[0]);
+	selectShip(&player0, 0);
 	noecho();
 	notimeout(gridWindow, true);
 	cbreak();
 	do {
 		currentInput = getch();
-		handleInput(&currentPlayer, currentInput);
-		if(currentPlayer.requestsRedraw) {
+		handleInput(&player0, currentInput);
+		if(player0.requestsRedraw) {
 			wclear(gridWindow);
-			drawGrid(currentPlayer.grid);
-			drawShips(currentPlayer.grid, currentPlayer.isHoldingShip
-											  ? currentPlayer.currentShip
-											  : NULL);
-			if(!currentPlayer.isHoldingShip) {
-				drawCursor(currentPlayer.grid, currentPlayer.cursor);
+			drawGrid(player0.grid);
+			drawShips(player0.ships, player0.grid,
+					  player0.isHoldingShip ? player0.currentShip : -1);
+			if(!player0.isHoldingShip) {
+				drawCursor(player0.grid, player0.cursor);
 			}
-			currentPlayer.requestsRedraw = false;
+			player0.requestsRedraw = false;
 		}
 
 	} while(true);

@@ -60,9 +60,36 @@ AABB getOccupiedCells(Ship ship) {
 	}
 }
 Ship *getShipAtPosition(Vector2 position, Ship *ships, int numShips) {
+	int shipId = getShipIndexAtPosition(position, ships, numShips);
+	if(shipId == -1)
+		return 0;
+	return &ships[shipId];
+}
+int getShipIndexAtPosition(Vector2 position, Ship *ships, int numShips) {
 	for(int i = 0; i < numShips; ++i) {
 		if(pointInside(getOccupiedCells(ships[i]), position))
-			return &ships[i];
+			return i;
 	}
-	return 0;
+	return -1;
+}
+
+bool shipIsValid(Ship *ship, Ship *ships, int numShips, AABB bounds,
+				 Ship *ignoredShip) {
+	AABB shipCells = getOccupiedCells(*ship);
+	if(!isInsideBounds(ship, bounds))
+		return false;
+	for(int i = 0; i < numShips; ++i) {
+		if(&ships[i] == ignoredShip)
+			continue;
+		if(intersects(shipCells, getOccupiedCells(ships[i])))
+			return false;
+	}
+	return true;
+}
+bool isValidMove(Ship *ships, AABB bounds, Ship *currentShip, Ship *newShip) {
+	return shipIsValid(newShip, ships, SHIP_TYPES, bounds, currentShip);
+}
+bool isInsideBounds(Ship *ship, AABB bounds) {
+	AABB shipCells = getOccupiedCells(*ship);
+	return inside(bounds, shipCells);
 }

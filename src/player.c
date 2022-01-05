@@ -6,10 +6,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-Player createPlayer(char *name, Grid *grid) {
+Player createPlayer(char *name, Grid *grid, Ship *ships) {
 	Player player = {0};
 	player.name = name;
 	player.grid = grid;
+	memcpy(player.ships, ships, sizeof(Ship) * SHIP_TYPES);
 	return player;
 }
 
@@ -27,9 +28,9 @@ char *getPlayerName(WINDOW *window) {
 	return name;
 }
 
-void selectShip(Player *player, Ship *shipToSelect) {
-	if(shipToSelect != NULL) {
-		player->currentShip = shipToSelect;
+void selectShip(Player *player, int index) {
+	if(index > -1 && index < SHIP_TYPES) {
+		player->currentShip = index;
 		player->isHoldingShip = true;
 	}
 }
@@ -41,12 +42,12 @@ void handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
 					int dy);
 void handleRotateLeft(Player *player, Grid *grid, Ship *currentShip);
 void handleRotateRight(Player *player, Grid *grid, Ship *currentShip);
-void handleShipSelection(Player *player, Grid *grid, int input);
+void handleShipSelection(Player *player, int input);
 void handleHoldingShip(Player *player, Grid *grid, Ship *currentShip);
 void handleQuit();
 
 void handleInput(Player *player, int input) {
-	Ship *currentShip = player->currentShip;
+	Ship *currentShip = &player->ships[player->currentShip];
 	Grid *grid = player->grid;
 	switch(input) {
 		case ERR: return;
@@ -85,7 +86,7 @@ void handleInput(Player *player, int input) {
 		case '2':
 		case '3':
 		case '4':
-		case '5': return handleShipSelection(player, grid, input);
+		case '5': return handleShipSelection(player, input);
 		case ' ':
 		case KEY_HOME: return handleHoldingShip(player, grid, currentShip);
 		case '\n':
@@ -103,7 +104,7 @@ void handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
 		Ship newShip = *currentShip;
 		newShip.x += dx;
 		newShip.y += dy;
-		if(isInsideBounds(&newShip, grid)) {
+		if(isInsideBounds(&newShip, getGridBounds(grid))) {
 			currentShip->x += dx;
 			currentShip->y += dy;
 
@@ -127,7 +128,7 @@ void handleRotateLeft(Player *player, Grid *grid, Ship *currentShip) {
 	if(player->isHoldingShip) {
 		Ship newShip = *currentShip;
 		newShip.orientation = (newShip.orientation + 1) % ORIENTATIONS;
-		if(isInsideBounds(&newShip, grid))
+		if(isInsideBounds(&newShip, getGridBounds(grid)))
 			currentShip->orientation = newShip.orientation;
 		player->requestsRedraw = true;
 	}
@@ -136,25 +137,26 @@ void handleRotateRight(Player *player, Grid *grid, Ship *currentShip) {
 	if(player->isHoldingShip) {
 		Ship newShip = *currentShip;
 		newShip.orientation = (newShip.orientation - 1) % ORIENTATIONS;
-		if(isInsideBounds(&newShip, grid))
+		if(isInsideBounds(&newShip, getGridBounds(grid)))
 			currentShip->orientation = newShip.orientation;
 		player->requestsRedraw = true;
 	}
 }
-void handleShipSelection(Player *player, Grid *grid, int input) {
-	selectShip(player, &grid->ships[input - '1']);
+void handleShipSelection(Player *player, int input) {
+	selectShip(player, input - '1');
 	player->requestsRedraw = true;
 }
 void handleHoldingShip(Player *player, Grid *grid, Ship *currentShip) {
 	if(player->isHoldingShip) {
-		if(isValidMove(grid, currentShip, currentShip)) {
+		if(isValidMove(player->ships, getGridBounds(grid), currentShip,
+					   currentShip)) {
 			player->isHoldingShip = false;
 			player->requestsRedraw = true;
 		}
 	} else {
-		Ship *foundShip =
-			getShipAtPosition(player->cursor, grid->ships, SHIP_TYPES);
-		if(foundShip != 0) {
+		int foundShip =
+			getShipIndexAtPosition(player->cursor, player->ships, SHIP_TYPES);
+		if(foundShip != -1) {
 			selectShip(player, foundShip);
 			player->isHoldingShip = true;
 			player->requestsRedraw = true;
