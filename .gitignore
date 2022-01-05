@@ -5,3 +5,5 @@ out/
 .vs/
 .DS_Store
 CMakeSettings.json
+.cache/
+.clangd*

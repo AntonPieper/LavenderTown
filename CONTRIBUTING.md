@@ -1,4 +1,6 @@
-# Commit Messages
+# Conventions
+
+## Commit Messages
 
 Commit messages should follow the rules of "Conventional Commits", to be read
 at [conventionalcommits.org](https://www.conventionalcommits.org/en/v1.0.0/).
