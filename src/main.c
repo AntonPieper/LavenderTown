@@ -1,14 +1,35 @@
-#include "grid.h"
+#include "events/arrangeShips.h"
+#include "events/createPlayers.h"
+#include "events/drawCreatePlayers.h"
 #include "player.h"
 #include "random.h"
-#include "ship.h"
-#include "vector.h"
-#include <stdlib.h>
+#include "state.h"
+#include <curses.h>
 #include <string.h>
 
-#define CASE(state, mask) if(((state) & (mask)) != 0U)
-
 const int GRID_SIZE = 10;
+typedef struct World {
+	WINDOW *window;
+	int input;
+	Player players[2];
+	int currentPlayerIndex;
+} World;
+
+StateType handleState(StateType incomingType, World *world) {
+	switch(incomingType) {
+		case CREATE_PLAYERS:
+			return createPlayers(incomingType, world->players,
+								 &world->currentPlayerIndex, world->input);
+		case DRAW_CREATE_PLAYERS:
+			return drawCreatePlayers(incomingType, world->players,
+									 world->currentPlayerIndex, world->window);
+		case ARRANGE_SHIPS:
+			return arrangeShips(incomingType, world->players,
+								&world->currentPlayerIndex, world->input);
+		case ATTACK_MODE: return QUIT;
+		default: return incomingType;
+	}
+}
 
 int main() {
 	srand(getSeed());
@@ -31,48 +52,51 @@ int main() {
 
 	int rows = getmaxy(stdscr);
 	int columns = getmaxx(stdscr);
+	int size = rows - 2;
+	if(size * 2 > columns)
+		columns = size * 2;
 
-	WINDOW *gridWindow = newwin(rows - 1, columns, 1, 0);
+	WINDOW *gridWindow = newwin(size, size * 2, 1, 0);
+	WINDOW *nameWindow = newwin(1, size * 2, 0, 0);
+	WINDOW *infoWindow = newwin(1, size * 2, size, 0);
 	refresh();
 
-	Grid *grid = generateGrid((Vector2){GRID_SIZE, GRID_SIZE}, gridWindow);
-	Player player0 =
-		createPlayer(getPlayerName(gridWindow), grid, generateShips(grid));
-	wclear(gridWindow);
-	Player player1 =
-		createPlayer(getPlayerName(gridWindow), grid, generateShips(grid));
+	World world = {0};
 
-	Player *currentPlayer = &player0;
+	world.window = gridWindow;
 
-	selectShip(currentPlayer, 0);
+	world.players[0].grid = generateGrid((Vector2){GRID_SIZE, GRID_SIZE});
+	world.players[1].grid = generateGrid((Vector2){GRID_SIZE, GRID_SIZE});
+
 	noecho();
-	notimeout(gridWindow, true);
+	nodelay(gridWindow, true);
 	cbreak();
-	State state = IDLE;
+	StateType state = DRAW_CREATE_PLAYERS;
 	do {
-		int currentInput = getch();
-		state = handleInput(currentPlayer, currentInput);
-		CASE(state, IDLE) {}
-		CASE(state, NEXT_STEP) {
-			currentPlayer = currentPlayer == &player0 ? &player1 : &player0;
-		}
-		CASE(state, REQUEST_REDRAW) {
+		world.input = wgetch(gridWindow);
+		state = handleState(state, &world);
+		if(state == DRAW_ARRANGE_SHIPS) {
 			wclear(gridWindow);
-			if(is_term_resized(rows, columns)) {
-				getmaxyx(stdscr, rows, columns);
-				wresize(gridWindow, rows - 1, columns);
-			}
-			move(0, 0);
-			clrtoeol();
-			mvprintw(0, (columns - (int)strlen(currentPlayer->name)) / 2, "%s",
-					 currentPlayer->name);
-			drawGrid(currentPlayer->grid);
-			drawShips(currentPlayer->ships, currentPlayer->grid,
+			wclear(nameWindow);
+			wclear(infoWindow);
+			Player *currentPlayer = &world.players[world.currentPlayerIndex];
+			mvwprintw(nameWindow, 0,
+					  (size - (int)strlen(currentPlayer->name)) / 2, "%s",
+					  currentPlayer->name);
+			wrefresh(nameWindow);
+			drawGrid(world.window, currentPlayer->grid);
+			drawShips(world.window, currentPlayer->ships, currentPlayer->grid,
 					  currentPlayer->isHoldingShip ? currentPlayer->currentShip
 												   : -1);
 			if(!currentPlayer->isHoldingShip) {
-				drawCursor(currentPlayer->grid, currentPlayer->cursor);
+				drawCursor(world.window, currentPlayer->grid,
+						   currentPlayer->cursor);
 			}
+			mvwprintw(infoWindow, 0, 0, "x: %d, y: %d, current ship: %s",
+					  currentPlayer->cursor.x, currentPlayer->cursor.y,
+					  getShipTypeName(currentPlayer->currentShip));
+			wrefresh(infoWindow);
+			state = ARRANGE_SHIPS;
 		}
 	} while(state != QUIT);
 	endwin(); // end curses mode

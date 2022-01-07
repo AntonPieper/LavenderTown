@@ -1,10 +1,4 @@
 #include "player.h"
-#include "aabb.h"
-#include "grid.h"
-#include "ship.h"
-#include "vector.h"
-#include <ctype.h>
-#include <stdlib.h>
 #include <string.h>
 
 Player createPlayer(char *name, Grid *grid, Ship *ships) {
@@ -19,16 +13,6 @@ const int MAX_PLAYER_NAME_LENGTH = 64;
 
 const char ENTER_YOUR_NAME_MESSAGE[] = "Enter your name: ";
 
-char *getPlayerName(WINDOW *window) {
-	mvwprintw(window, getmaxy(window) / 2,
-			  (getmaxx(window) - (int)strlen(ENTER_YOUR_NAME_MESSAGE)) / 2,
-			  ENTER_YOUR_NAME_MESSAGE);
-	char *name = malloc((MAX_PLAYER_NAME_LENGTH + 1) * sizeof(char));
-	wrefresh(window);
-	wgetnstr(window, name, MAX_PLAYER_NAME_LENGTH);
-	return name;
-}
-
 void selectShip(Player *player, int index) {
 	if(index > -1 && index < SHIP_TYPES) {
 		player->currentShip = index;
@@ -38,17 +22,17 @@ void selectShip(Player *player, int index) {
 
 void deselectShip(Player *player) { player->isHoldingShip = false; }
 
-State handleResize();
-State handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
+/*StateType handleResize();
+StateType handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
 					 int dy);
-State handleRotateLeft(Player *player, Grid *grid, Ship *currentShip);
-State handleRotateRight(Player *player, Grid *grid, Ship *currentShip);
-State handleShipSelection(Player *player, int input);
-State handleHoldingShip(Player *player, Grid *grid, Ship *currentShip);
-State handleNextStep();
-State handleQuit();
+StateType handleRotateLeft(Player *player, Grid *grid, Ship *currentShip);
+StateType handleRotateRight(Player *player, Grid *grid, Ship *currentShip);
+StateType handleShipSelection(Player *player, int input);
+StateType handleHoldingShip(Player *player, Grid *grid, Ship *currentShip);
+StateType handleNextStep();
+StateType handleQuit();
 
-State handleInput(Player *player, int input) {
+StateType handleInput(Player *player, int input) {
 	Ship *currentShip = &player->ships[player->currentShip];
 	Grid *grid = player->grid;
 	input = tolower(input);
@@ -88,8 +72,8 @@ State handleInput(Player *player, int input) {
 	}
 }
 
-State handleResize() { return REQUEST_REDRAW; }
-State handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
+StateType handleResize() { return REQUEST_REDRAW; }
+StateType handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
 					 int dy) {
 	if(player->isHoldingShip) {
 		Ship newShip = *currentShip;
@@ -115,7 +99,7 @@ State handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
 	return REQUEST_REDRAW;
 }
 
-State handleRotateLeft(Player *player, Grid *grid, Ship *currentShip) {
+StateType handleRotateLeft(Player *player, Grid *grid, Ship *currentShip) {
 	if(player->isHoldingShip) {
 		Ship newShip = *currentShip;
 		newShip.orientation = (newShip.orientation + 1) % ORIENTATIONS;
@@ -125,7 +109,7 @@ State handleRotateLeft(Player *player, Grid *grid, Ship *currentShip) {
 	}
 	return IDLE;
 }
-State handleRotateRight(Player *player, Grid *grid, Ship *currentShip) {
+StateType handleRotateRight(Player *player, Grid *grid, Ship *currentShip) {
 	if(player->isHoldingShip) {
 		Ship newShip = *currentShip;
 		newShip.orientation = (newShip.orientation - 1) % ORIENTATIONS;
@@ -135,11 +119,11 @@ State handleRotateRight(Player *player, Grid *grid, Ship *currentShip) {
 	}
 	return IDLE;
 }
-State handleShipSelection(Player *player, int input) {
+StateType handleShipSelection(Player *player, int input) {
 	selectShip(player, input - '1');
 	return REQUEST_REDRAW;
 }
-State handleHoldingShip(Player *player, Grid *grid, Ship *currentShip) {
+StateType handleHoldingShip(Player *player, Grid *grid, Ship *currentShip) {
 	if(player->isHoldingShip) {
 		if(isValidMove(player->ships, getGridBounds(grid), currentShip,
 					   currentShip)) {
@@ -157,5 +141,5 @@ State handleHoldingShip(Player *player, Grid *grid, Ship *currentShip) {
 	}
 	return IDLE;
 }
-State handleNextStep() { return NEXT_STEP | REQUEST_REDRAW; }
-State handleQuit() { return QUIT; }
+StateType handleNextStep() { return ATTACK_MODE | REQUEST_REDRAW; }
+StateType handleQuit() { return QUIT; } */
