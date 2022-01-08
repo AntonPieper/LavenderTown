@@ -26,6 +26,9 @@ static const KeyMapping SWITCH_PLAYER[] = {'\n', 1, KEY_ENTER, 1};
 static const size_t SWITCH_PLAYER_LENGTH =
 	sizeof(GRAB_SHIP) / sizeof(GRAB_SHIP[0]);
 
+static const KeyMapping EXIT[] = {KEY_END, 1, 27, 1, 3, 1};
+static const size_t EXIT_LENGTH = sizeof(EXIT) / sizeof(EXIT[0]);
+
 StateType handleMovement(Player *player, Ship *currentShip, int dx, int dy);
 StateType handleRotation(Player *player, Ship *currentShip, int rotateRight);
 StateType handleSwitchShip(Player *player, int input);
@@ -56,6 +59,9 @@ StateType arrangeShips(StateType incomingType, Player players[2],
 
 	if(getMappedValue(SWITCH_PLAYER_LENGTH, SWITCH_PLAYER, input))
 		return handleSwitchPlayers(players, currentPlayerIndex);
+
+	if(getMappedValue(EXIT_LENGTH, EXIT, input))
+		return QUIT;
 
 	return ARRANGE_SHIPS;
 }

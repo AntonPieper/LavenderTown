@@ -41,8 +41,6 @@ int main() {
 	}
 	start_color();
 
-	keypad(stdscr, true);
-
 	init_pair(COLOR_CARRIER, COLOR_BLACK, COLOR_GREEN);
 	init_pair(COLOR_BATTLESHIP, COLOR_BLACK, COLOR_RED);
 	init_pair(COLOR_CRUISER, COLOR_BLACK, COLOR_YELLOW);
@@ -58,7 +56,7 @@ int main() {
 
 	WINDOW *gridWindow = newwin(size, size * 2, 1, 0);
 	WINDOW *nameWindow = newwin(1, size * 2, 0, 0);
-	WINDOW *infoWindow = newwin(1, size * 2, size, 0);
+	WINDOW *infoWindow = newwin(1, size * 2, rows - 1, 0);
 	refresh();
 
 	World world = {0};
@@ -70,20 +68,19 @@ int main() {
 
 	noecho();
 	nodelay(gridWindow, true);
+	keypad(gridWindow, true);
 	cbreak();
 	StateType state = DRAW_CREATE_PLAYERS;
 	do {
 		world.input = wgetch(gridWindow);
 		state = handleState(state, &world);
 		if(state == DRAW_ARRANGE_SHIPS) {
-			wclear(gridWindow);
-			wclear(nameWindow);
-			wclear(infoWindow);
+			werase(gridWindow);
+			werase(nameWindow);
 			Player *currentPlayer = &world.players[world.currentPlayerIndex];
 			mvwprintw(nameWindow, 0,
 					  (size - (int)strlen(currentPlayer->name)) / 2, "%s",
 					  currentPlayer->name);
-			wrefresh(nameWindow);
 			drawGrid(world.window, currentPlayer->grid);
 			drawShips(world.window, currentPlayer->ships, currentPlayer->grid,
 					  currentPlayer->isHoldingShip ? currentPlayer->currentShip
@@ -92,11 +89,13 @@ int main() {
 				drawCursor(world.window, currentPlayer->grid,
 						   currentPlayer->cursor);
 			}
+			werase(infoWindow);
 			mvwprintw(infoWindow, 0, 0, "x: %d, y: %d, current ship: %s",
 					  currentPlayer->cursor.x, currentPlayer->cursor.y,
 					  getShipTypeName(currentPlayer->currentShip));
-			wrefresh(infoWindow);
 			state = ARRANGE_SHIPS;
+			wrefresh(infoWindow);
+			wrefresh(nameWindow);
 		}
 	} while(state != QUIT);
 	endwin(); // end curses mode
