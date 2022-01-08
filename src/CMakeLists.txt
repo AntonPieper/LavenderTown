@@ -11,12 +11,19 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 
 set(SOURCES
     main.c
-    grid.c
-    random.c
-    vector.c
-    ship.c
     aabb.c
+    cursor.c
+    drawing.c
+    events/arrangeShips.c
+    events/createPlayers.c
+    events/drawArrangeShips.c
+    events/drawCreatePlayers.c
+    grid.c
+    input.c
     player.c
+    random.c
+    ship.c
+    vector.c
 )
 
 add_executable (${PROJECT_NAME} ${SOURCES})

@@ -11,8 +11,8 @@
 #define COLOR_DESTROYER 5
 #define COLOR_INVALID 6
 
-typedef enum Orientation { UP, RIGHT, DOWN, LEFT } Orientation;
-#define ORIENTATIONS 4
+typedef enum Direction { DIR_UP, DIR_RIGHT, DIR_DOWN, DIR_LEFT } Orientation;
+#define DIRECTIONS 4
 char *getOrientationName(Orientation orientation);
 
 typedef enum ShipType {
@@ -36,6 +36,19 @@ typedef struct Ship {
 
 AABB getOccupiedCells(Ship ship);
 
-Ship *getShipAtPosition(Vector2 position, Ship *ships, int numShips);
+///
+/// \returns found ship, else NULL
+///
+Ship *getShipAtPosition(Vector2 position, Ship *ships);
+///
+/// \returns found ship, else -1
+///
+int getShipIndexAtPosition(Vector2 position, Ship *ships);
+
+bool shipIsValid(Ship *ship, Ship *ships, int numShips, AABB bounds,
+				 Ship *ignoredShip);
+bool isValidShipMove(Ship *ships, AABB bounds, Ship *currentShip,
+					 Ship *newShip);
+bool shipInsideBounds(Ship *ship, AABB bounds);
 
 #endif // SRC_SHIP_H_

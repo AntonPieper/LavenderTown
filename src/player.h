@@ -1,25 +1,25 @@
 #ifndef SRC_PLAYER_H_
 #define SRC_PLAYER_H_
 
+#include "cursor.h"
 #include "grid.h"
+#include "state.h"
 
 typedef struct Player {
 	char *name;
-	bool requestsRedraw;
+
 	bool isHoldingShip;
-	Ship *currentShip;
-	Vector2 cursor;
+	int currentShip;
+
+	Cursor cursor;
+
 	Grid *grid;
-	bool gridIsValid;
+	Ship ships[SHIP_TYPES];
 } Player;
 
-Player createPlayer(char *name, Grid *grid);
+Player createPlayer(char *name, Grid *grid, Ship *ships);
 
-char *getPlayerName(WINDOW *window);
-
-void selectShip(Player *player, Ship *shipToSelect);
+void selectShip(Player *player, int index);
 void deselectShip(Player *player);
-
-void handleInput(Player *player, int input);
 
 #endif // SRC_PLAYER_H_

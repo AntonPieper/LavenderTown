@@ -1,0 +1,14 @@
+#ifndef SRC_STATE_H
+#define SRC_STATE_H
+
+typedef enum StateType {
+	QUIT,
+	CREATE_PLAYERS,
+	DRAW_CREATE_PLAYERS,
+	ARRANGE_SHIPS,
+	DRAW_ARRANGE_SHIPS,
+	ATTACK_MODE,
+	DRAW_ATTACK_MODE
+} StateType;
+
+#endif // SRC_STATE_H
