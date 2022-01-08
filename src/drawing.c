@@ -64,6 +64,7 @@ void drawShip(WINDOW *window, Ship *shipRef, Grid *grid, Ship *ships,
 	ship.x += 1;
 	ship.y += 1;
 	Vector2 cellSize = getGridCellSize(window, grid);
+
 	AABB shipCells = getOccupiedCells(ship);
 	shipCells.max = add(shipCells.max, VECTOR2_ONE);
 
@@ -82,6 +83,10 @@ void drawShip(WINDOW *window, Ship *shipRef, Grid *grid, Ship *ships,
 					: COLOR_INVALID;
 
 	drawFilledBox(window, shipCells, color, drawOutline);
+	wattron(window, COLOR_PAIR(color));
+	mvwaddch(window, ship.y * cellSize.y + cellSize.y / 2,
+			 ship.x * cellSize.x + cellSize.x / 2, ship.type + '1');
+	wattroff(window, COLOR_PAIR(color));
 }
 
 void drawShips(WINDOW *window, Ship *ships, Grid *grid, int highlightedShip) {

@@ -79,7 +79,7 @@ int main() {
 			werase(nameWindow);
 			Player *currentPlayer = &world.players[world.currentPlayerIndex];
 			mvwprintw(nameWindow, 0,
-					  (size - (int)strlen(currentPlayer->name)) / 2, "%s",
+					  size - (int)strlen(currentPlayer->name) / 2, "%s",
 					  currentPlayer->name);
 			drawGrid(world.window, currentPlayer->grid);
 			drawShips(world.window, currentPlayer->ships, currentPlayer->grid,
@@ -90,7 +90,8 @@ int main() {
 						   currentPlayer->cursor);
 			}
 			werase(infoWindow);
-			mvwprintw(infoWindow, 0, 0, "x: %d, y: %d, current ship: %s",
+			mvwprintw(infoWindow, 0, 0,
+					  "cursor: {x: %d, y: %d}, current ship: %s",
 					  currentPlayer->cursor.x, currentPlayer->cursor.y,
 					  getShipTypeName(currentPlayer->currentShip));
 			state = ARRANGE_SHIPS;
