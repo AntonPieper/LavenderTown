@@ -14,8 +14,9 @@ static const KeyMapping RIGHT[] = {'d', 1,  KEY_RIGHT, 1,  'l', 1,
 								   'a', -1, KEY_LEFT,  -1, 'h', -1};
 static const size_t RIGHT_LENGTH = sizeof(RIGHT) / sizeof(RIGHT[0]);
 
-static const KeyMapping ROTATE_RIGHT[] = {'e', 1,  KEY_NEXT,     1,  'i', 1,
-										  'q', -1, KEY_PREVIOUS, -1, 'u', -1};
+static const KeyMapping ROTATE_RIGHT[] = {
+	'e', 1,  KEY_NPAGE, 1,  KEY_NEXT,     1,  'i', 1,
+	'q', -1, KEY_PPAGE, -1, KEY_PREVIOUS, -1, 'u', -1};
 static const size_t ROTATE_RIGHT_LENGTH =
 	sizeof(ROTATE_RIGHT) / sizeof(ROTATE_RIGHT[0]);
 

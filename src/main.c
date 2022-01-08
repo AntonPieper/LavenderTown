@@ -3,6 +3,7 @@
 #include "events/drawCreatePlayers.h"
 #include "player.h"
 #include "random.h"
+#include "ship.h"
 #include "state.h"
 #include <curses.h>
 #include <string.h>
@@ -79,7 +80,7 @@ int main() {
 			werase(nameWindow);
 			Player *currentPlayer = &world.players[world.currentPlayerIndex];
 			mvwprintw(nameWindow, 0,
-					  (size - (int)strlen(currentPlayer->name)) / 2, "%s",
+					  size - (int)strlen(currentPlayer->name) / 2, "%s",
 					  currentPlayer->name);
 			drawGrid(world.window, currentPlayer->grid);
 			drawShips(world.window, currentPlayer->ships, currentPlayer->grid,
@@ -90,9 +91,15 @@ int main() {
 						   currentPlayer->cursor);
 			}
 			werase(infoWindow);
-			mvwprintw(infoWindow, 0, 0, "x: %d, y: %d, current ship: %s",
-					  currentPlayer->cursor.x, currentPlayer->cursor.y,
-					  getShipTypeName(currentPlayer->currentShip));
+			char *shipName = getShipTypeName(currentPlayer->currentShip);
+			mvwprintw(infoWindow, 0, 0,
+					  "cursor: {x: %d, y: %d}, current ship: ",
+					  currentPlayer->cursor.x, currentPlayer->cursor.y);
+			int color = getShipTypeColor(currentPlayer->currentShip);
+			wattron(infoWindow, COLOR_PAIR(color));
+			wprintw(infoWindow, "%s", shipName);
+			wattroff(infoWindow, COLOR_PAIR(color));
+
 			state = ARRANGE_SHIPS;
 			wrefresh(infoWindow);
 			wrefresh(nameWindow);

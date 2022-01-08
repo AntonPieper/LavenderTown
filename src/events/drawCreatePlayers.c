@@ -32,6 +32,5 @@ StateType drawCreatePlayers(StateType incomingType, Player *players,
 				  (columns - nameLength - MESSAGE_LENGTH - 1) / 2 +
 					  MESSAGE_LENGTH + 1,
 				  "%s", name);
-	wrefresh(window);
 	return CREATE_PLAYERS;
 }

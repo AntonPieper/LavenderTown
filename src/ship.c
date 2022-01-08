@@ -19,12 +19,12 @@ char *getOrientationName(Orientation orientation) {
 
 char *getShipTypeName(ShipType shipType) {
 	switch(shipType) {
-		case CARRIER: return "CARRIER";
-		case BATTLESHIP: return "BATTLESHIP";
-		case CRUISER: return "CRUISER";
-		case SUBMARINE: return "SUBMARINE";
-		case DESTROYER: return "DESTROYER";
-		default: return "INVALID";
+		case CARRIER: return "Carrier";
+		case BATTLESHIP: return "Battleship";
+		case CRUISER: return "Cruiser";
+		case SUBMARINE: return "Submarine";
+		case DESTROYER: return "Destroyer";
+		default: return "Invalid";
 	}
 }
 
