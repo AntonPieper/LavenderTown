@@ -92,9 +92,12 @@ int main() {
 			}
 			werase(infoWindow);
 			char *shipName = getShipTypeName(currentPlayer->currentShip);
-			mvwprintw(infoWindow, 0, 0,
-					  "cursor: {x: %d, y: %d}, current ship: ",
-					  currentPlayer->cursor.x, currentPlayer->cursor.y);
+			mvwaddstr(infoWindow, 0, 0, "cursor: ");
+			wattron(infoWindow, A_BOLD);
+			wprintw(infoWindow, "%c%d", currentPlayer->cursor.x + 'A',
+					currentPlayer->cursor.y + 1);
+			wattroff(infoWindow, A_BOLD);
+			waddstr(infoWindow, ", current ship: ");
 			int color = getShipTypeColor(currentPlayer->currentShip);
 			wattron(infoWindow, COLOR_PAIR(color));
 			wprintw(infoWindow, "%s", shipName);
