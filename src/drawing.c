@@ -38,8 +38,10 @@ void drawGrid(WINDOW *window, Grid *grid) {
 		mvwvline(window, 1, (x + 1) * cellSize.x, 0,
 				 (grid->size.y + 1) * cellSize.y - 1);
 
+		wattron(window, A_BOLD);
 		mvwprintw(window, cellSize.y / 2, (x + 1) * cellSize.x + cellSize.x / 2,
-				  "%d", 1 + x);
+				  "%c", 'A' + x);
+		wattroff(window, A_BOLD);
 	}
 	for(int y = 0; y < grid->size.y; ++y) {
 		mvwaddch(window, (y + 1) * cellSize.y, maxX, ACS_RTEE);
@@ -47,8 +49,10 @@ void drawGrid(WINDOW *window, Grid *grid) {
 
 		mvwhline(window, (y + 1) * cellSize.y, 1, 0, maxX - 1);
 
-		mvwprintw(window, (y + 1) * cellSize.y + cellSize.y / 2,
-				  (cellSize.x + 1) / 2, "%c", 'A' + y);
+		wattron(window, A_BOLD);
+		mvwprintw(window, (y + 1) * cellSize.y + cellSize.y / 2, cellSize.x / 2,
+				  "%2d", 1 + y);
+		wattroff(window, A_BOLD);
 	}
 	for(int y = 0; y < grid->size.y; ++y) {
 		for(int x = 0; x < grid->size.x; ++x) {
