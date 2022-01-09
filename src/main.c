@@ -1,5 +1,6 @@
 #include "events/arrangeShips.h"
 #include "events/createPlayers.h"
+#include "events/drawArrangeShips.h"
 #include "events/drawCreatePlayers.h"
 #include "player.h"
 #include "random.h"
@@ -10,7 +11,9 @@
 
 const int GRID_SIZE = 10;
 typedef struct World {
-	WINDOW *window;
+	WINDOW *grid;
+	WINDOW *name;
+	WINDOW *info;
 	int input;
 	Player players[2];
 	int currentPlayerIndex;
@@ -23,11 +26,16 @@ StateType handleState(StateType incomingType, World *world) {
 								 &world->currentPlayerIndex, world->input);
 		case DRAW_CREATE_PLAYERS:
 			return drawCreatePlayers(incomingType, world->players,
-									 world->currentPlayerIndex, world->window);
+									 world->currentPlayerIndex, world->grid);
 		case ARRANGE_SHIPS:
 			return arrangeShips(incomingType, world->players,
 								&world->currentPlayerIndex, world->input);
 		case ATTACK_MODE: return QUIT;
+		case DRAW_ARRANGE_SHIPS:
+			return drawArrangeShips(incomingType,
+									&world->players[world->currentPlayerIndex],
+									world->grid, world->name, world->info);
+
 		default: return incomingType;
 	}
 }
@@ -62,7 +70,9 @@ int main() {
 
 	World world = {0};
 
-	world.window = gridWindow;
+	world.grid = gridWindow;
+	world.info = infoWindow;
+	world.name = nameWindow;
 
 	world.players[0].grid = generateGrid((Vector2){GRID_SIZE, GRID_SIZE});
 	world.players[1].grid = generateGrid((Vector2){GRID_SIZE, GRID_SIZE});
@@ -75,38 +85,6 @@ int main() {
 	do {
 		world.input = wgetch(gridWindow);
 		state = handleState(state, &world);
-		if(state == DRAW_ARRANGE_SHIPS) {
-			werase(gridWindow);
-			werase(nameWindow);
-			Player *currentPlayer = &world.players[world.currentPlayerIndex];
-			mvwprintw(nameWindow, 0,
-					  size - (int)strlen(currentPlayer->name) / 2, "%s",
-					  currentPlayer->name);
-			drawGrid(world.window, currentPlayer->grid);
-			drawShips(world.window, currentPlayer->ships, currentPlayer->grid,
-					  currentPlayer->isHoldingShip ? currentPlayer->currentShip
-												   : -1);
-			if(!currentPlayer->isHoldingShip) {
-				drawCursor(world.window, currentPlayer->grid,
-						   currentPlayer->cursor);
-			}
-			werase(infoWindow);
-			char *shipName = getShipTypeName(currentPlayer->currentShip);
-			mvwaddstr(infoWindow, 0, 0, "cursor: ");
-			wattron(infoWindow, A_BOLD);
-			wprintw(infoWindow, "%c%d", currentPlayer->cursor.x + 'A',
-					currentPlayer->cursor.y + 1);
-			wattroff(infoWindow, A_BOLD);
-			waddstr(infoWindow, ", current ship: ");
-			int color = getShipTypeColor(currentPlayer->currentShip);
-			wattron(infoWindow, COLOR_PAIR(color));
-			wprintw(infoWindow, "%s", shipName);
-			wattroff(infoWindow, COLOR_PAIR(color));
-
-			state = ARRANGE_SHIPS;
-			wrefresh(infoWindow);
-			wrefresh(nameWindow);
-		}
 	} while(state != QUIT);
 	endwin(); // end curses mode
 
