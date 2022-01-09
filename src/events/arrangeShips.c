@@ -6,9 +6,9 @@
 #include <ctype.h>
 #include <curses.h>
 
-static const KeyMapping FORWARD[] = {'w', 1,  KEY_UP,   1,  'k', 1,
+static const KeyMapping UP[] = {'w', 1,  KEY_UP,   1,  'k', 1,
 									 's', -1, KEY_DOWN, -1, 'j', -1};
-static const size_t FORWARD_LENGTH = sizeof(FORWARD) / sizeof(FORWARD[0]);
+static const size_t UP_LENGTH = sizeof(UP) / sizeof(UP[0]);
 
 static const KeyMapping RIGHT[] = {'d', 1,  KEY_RIGHT, 1,  'l', 1,
 								   'a', -1, KEY_LEFT,  -1, 'h', -1};
@@ -42,7 +42,7 @@ StateType arrangeShips(StateType incomingType, Player players[2],
 	Player *player = &players[*currentPlayerIndex];
 	Ship *currentShip = &player->ships[player->currentShip];
 
-	int forward = getMappedValue(FORWARD_LENGTH, FORWARD, input);
+	int forward = getMappedValue(UP_LENGTH, UP, input);
 	int right = getMappedValue(RIGHT_LENGTH, RIGHT, input);
 	if(forward || right)
 		return handleMovement(player, currentShip, right, -forward);
