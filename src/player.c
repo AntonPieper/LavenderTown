@@ -1,13 +1,8 @@
 #include "player.h"
+#include "ship.h"
+#include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
-
-Player createPlayer(char *name, Grid *grid, Ship *ships) {
-	Player player = {0};
-	player.name = name;
-	player.grid = grid;
-	memcpy(player.ships, ships, sizeof(Ship) * SHIP_TYPES);
-	return player;
-}
 
 const int MAX_PLAYER_NAME_LENGTH = 64;
 
@@ -22,124 +17,58 @@ void selectShip(Player *player, int index) {
 
 void deselectShip(Player *player) { player->isHoldingShip = false; }
 
-/*StateType handleResize();
-StateType handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
-					 int dy);
-StateType handleRotateLeft(Player *player, Grid *grid, Ship *currentShip);
-StateType handleRotateRight(Player *player, Grid *grid, Ship *currentShip);
-StateType handleShipSelection(Player *player, int input);
-StateType handleHoldingShip(Player *player, Grid *grid, Ship *currentShip);
-StateType handleNextStep();
-StateType handleQuit();
+int getIndex(int x, int y, int width) { return x + y * width; }
 
-StateType handleInput(Player *player, int input) {
-	Ship *currentShip = &player->ships[player->currentShip];
-	Grid *grid = player->grid;
-	input = tolower(input);
-	switch(input) {
-		case ERR: return IDLE;
-		case KEY_RESIZE: return handleResize(player);
-		case 'w':
-		case 'k':
-		case KEY_UP: return handleMovement(player, grid, currentShip, 0, -1);
-		case 's':
-		case 'j':
-		case KEY_DOWN: return handleMovement(player, grid, currentShip, 0, 1);
-		case 'a':
-		case 'h':
-		case KEY_LEFT: return handleMovement(player, grid, currentShip, -1, 0);
-		case 'd':
-		case 'l':
-		case KEY_RIGHT: return handleMovement(player, grid, currentShip, 1, 0);
-		case 'u':
-		case 'q':
-		case KEY_PREVIOUS: return handleRotateLeft(player, grid, currentShip);
-		case 'i':
-		case 'e':
-		case KEY_NEXT: return handleRotateRight(player, grid, currentShip);
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5': return handleShipSelection(player, input);
-		case ' ':
-		case KEY_HOME: return handleHoldingShip(player, grid, currentShip);
-		case '\n':
-		case KEY_ENTER: return handleNextStep();
-		case KEY_EXIT:
-		case KEY_CANCEL: return handleQuit();
-		default: return IDLE;
+bool alreadyHit(int x, int y, HitInfo *hits, int gridWidth) {
+	return hits[getIndex(x, y, gridWidth)].type != INVALID_HIT;
+}
+void setHitInfoType(HitInfo *hits, int gridWidth, AABB cells, HitType type) {
+	for(int y = cells.min.y; y < cells.max.y; ++y)
+		for(int x = cells.min.x; x < cells.max.x; ++x) {
+			int index = getIndex(x, y, gridWidth);
+			hits[index].type = type;
+		}
+}
+HitInfo getHitInfo(Player *enemy, Vector2 hitLocation, HitInfo *hits) {
+	HitInfo hitInfo;
+	hitInfo.type = NO_HIT;
+	hitInfo.hitShip = NULL;
+
+	int shipIndex = getShipIndexAtPosition(hitLocation, enemy->ships);
+	if(shipIndex == -1) {
+		return hitInfo;
 	}
+
+	Ship *hitShip = &enemy->ships[shipIndex];
+	AABB cells = getOccupiedCells(*hitShip);
+
+	int hitLocationIndex =
+		getIndex(hitLocation.x, hitLocation.y, enemy->gridDimensions.x);
+
+	bool destroyed = true;
+	for(int y = cells.min.y; y <= cells.max.y; ++y)
+		for(int x = cells.min.x; x <= cells.max.x; ++x) {
+			int index = getIndex(x, y, enemy->gridDimensions.x);
+			if(index == hitLocationIndex)
+				continue;
+			destroyed =
+				destroyed && alreadyHit(x, y, hits, enemy->gridDimensions.x);
+		}
+	hitInfo.type = destroyed ? DESTROYED : HIT;
+	hitInfo.hitShip = hitShip;
+	return hitInfo;
 }
 
-StateType handleResize() { return REQUEST_REDRAW; }
-StateType handleMovement(Player *player, Grid *grid, Ship *currentShip, int dx,
-					 int dy) {
-	if(player->isHoldingShip) {
-		Ship newShip = *currentShip;
-		newShip.x += dx;
-		newShip.y += dy;
-		if(isInsideBounds(&newShip, getGridBounds(grid))) {
-			currentShip->x += dx;
-			currentShip->y += dy;
-
-			player->cursor.x = currentShip->x;
-			player->cursor.y = currentShip->y;
-		}
-	} else {
-		Vector2 newCursor = player->cursor;
-		newCursor.x += dx;
-		newCursor.y += dy;
-		if(pointInside((AABB){0, 0, grid->size.x - 1, grid->size.y - 1},
-					   newCursor)) {
-			player->cursor.x += dx;
-			player->cursor.y += dy;
-		}
+HitInfo attack(Player *player, Vector2 hitLocation, Player *enemy) {
+	HitInfo hitInfo = getHitInfo(enemy, hitLocation, player->hits);
+	if(hitInfo.type == DESTROYED) {
+		hitInfo.hitShip->sunk = true;
+		const int shipLength = getShipTypeLength(hitInfo.hitShip->type);
+		const Vector2 offset = {};
+		setHitInfoType(player->hits, player->gridDimensions.x,
+					   getOccupiedCells(*hitInfo.hitShip), DESTROYED);
 	}
-	return REQUEST_REDRAW;
+	player->hits[getIndex(hitLocation.x, hitLocation.y,
+						  player->gridDimensions.x)] = hitInfo;
+	return hitInfo;
 }
-
-StateType handleRotateLeft(Player *player, Grid *grid, Ship *currentShip) {
-	if(player->isHoldingShip) {
-		Ship newShip = *currentShip;
-		newShip.orientation = (newShip.orientation + 1) % ORIENTATIONS;
-		if(isInsideBounds(&newShip, getGridBounds(grid)))
-			currentShip->orientation = newShip.orientation;
-		return REQUEST_REDRAW;
-	}
-	return IDLE;
-}
-StateType handleRotateRight(Player *player, Grid *grid, Ship *currentShip) {
-	if(player->isHoldingShip) {
-		Ship newShip = *currentShip;
-		newShip.orientation = (newShip.orientation - 1) % ORIENTATIONS;
-		if(isInsideBounds(&newShip, getGridBounds(grid)))
-			currentShip->orientation = newShip.orientation;
-		return REQUEST_REDRAW;
-	}
-	return IDLE;
-}
-StateType handleShipSelection(Player *player, int input) {
-	selectShip(player, input - '1');
-	return REQUEST_REDRAW;
-}
-StateType handleHoldingShip(Player *player, Grid *grid, Ship *currentShip) {
-	if(player->isHoldingShip) {
-		if(isValidMove(player->ships, getGridBounds(grid), currentShip,
-					   currentShip)) {
-			player->isHoldingShip = false;
-			return REQUEST_REDRAW;
-		}
-	} else {
-		int foundShip =
-			getShipIndexAtPosition(player->cursor, player->ships, SHIP_TYPES);
-		if(foundShip != -1) {
-			selectShip(player, foundShip);
-			player->isHoldingShip = true;
-			return REQUEST_REDRAW;
-		}
-	}
-	return IDLE;
-}
-StateType handleNextStep() { return ATTACK_MODE | REQUEST_REDRAW; }
-StateType handleQuit() { return QUIT; } */

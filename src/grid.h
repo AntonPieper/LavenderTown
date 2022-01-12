@@ -4,14 +4,8 @@
 #include "ship.h"
 #include "vector.h"
 
-typedef struct Grid {
-	Vector2 size;
-} Grid;
+Ship *generateShips(Vector2 gridSize);
 
-Grid *generateGrid(Vector2 size);
-
-Ship *generateShips(Grid *grid);
-
-AABB getGridBounds(Grid *grid);
+AABB getGridBounds(Vector2 gridSize);
 
 #endif // SRC_GRID_H_

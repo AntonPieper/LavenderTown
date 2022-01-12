@@ -79,6 +79,8 @@ bool shipIsValid(Ship *ship, Ship *ships, int numShips, AABB bounds,
 	AABB shipCells = getOccupiedCells(*ship);
 	if(!shipInsideBounds(ship, bounds))
 		return false;
+	if(!ships)
+		return true;
 	for(int i = 0; i < numShips; ++i) {
 		if(&ships[i] == ignoredShip)
 			continue;

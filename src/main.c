@@ -1,6 +1,8 @@
 #include "events/arrangeShips.h"
+#include "events/attackMode.h"
 #include "events/createPlayers.h"
 #include "events/drawArrangeShips.h"
+#include "events/drawAttackMode.h"
 #include "events/drawCreatePlayers.h"
 #include "player.h"
 #include "random.h"
@@ -11,9 +13,9 @@
 
 const int GRID_SIZE = 10;
 typedef struct World {
-	WINDOW *grid;
-	WINDOW *name;
-	WINDOW *info;
+	WINDOW *gridWindow;
+	WINDOW *nameWindow;
+	WINDOW *infoWindow;
 	int input;
 	Player players[2];
 	int currentPlayerIndex;
@@ -26,16 +28,22 @@ StateType handleState(StateType incomingType, World *world) {
 								 &world->currentPlayerIndex, world->input);
 		case DRAW_CREATE_PLAYERS:
 			return drawCreatePlayers(incomingType, world->players,
-									 world->currentPlayerIndex, world->grid);
+									 world->currentPlayerIndex,
+									 world->gridWindow);
 		case ARRANGE_SHIPS:
 			return arrangeShips(incomingType, world->players,
 								&world->currentPlayerIndex, world->input);
-		case ATTACK_MODE: return QUIT;
 		case DRAW_ARRANGE_SHIPS:
-			return drawArrangeShips(incomingType,
-									&world->players[world->currentPlayerIndex],
-									world->grid, world->name, world->info);
+			return drawArrangeShips(
+				incomingType, &world->players[world->currentPlayerIndex],
+				world->gridWindow, world->nameWindow, world->infoWindow);
 
+		case ATTACK_MODE:
+			return attackMode(incomingType, world->players,
+							  &world->currentPlayerIndex, world->input);
+		case DRAW_ATTACK_MODE:
+			return drawAttackMode(incomingType, world->players,
+								  world->currentPlayerIndex, world->gridWindow);
 		default: return incomingType;
 	}
 }
@@ -55,6 +63,8 @@ int main() {
 	init_pair(COLOR_CRUISER, COLOR_BLACK, COLOR_YELLOW);
 	init_pair(COLOR_SUBMARINE, COLOR_BLACK, COLOR_BLUE);
 	init_pair(COLOR_DESTROYER, COLOR_BLACK, COLOR_CYAN);
+	init_pair(COLOR_NO_HIT, COLOR_WHITE, COLOR_CYAN);
+	init_pair(COLOR_HIT, COLOR_BLACK, COLOR_RED);
 	init_pair(COLOR_INVALID, COLOR_CYAN, COLOR_MAGENTA);
 
 	int rows = getmaxy(stdscr);
@@ -70,12 +80,13 @@ int main() {
 
 	World world = {0};
 
-	world.grid = gridWindow;
-	world.info = infoWindow;
-	world.name = nameWindow;
+	world.gridWindow = gridWindow;
+	world.infoWindow = infoWindow;
+	world.nameWindow = nameWindow;
 
-	world.players[0].grid = generateGrid((Vector2){GRID_SIZE, GRID_SIZE});
-	world.players[1].grid = generateGrid((Vector2){GRID_SIZE, GRID_SIZE});
+	Vector2 gridDimensions = {GRID_SIZE, GRID_SIZE};
+	world.players[0].gridDimensions = gridDimensions;
+	world.players[1].gridDimensions = gridDimensions;
 
 	noecho();
 	nodelay(gridWindow, true);

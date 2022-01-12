@@ -50,7 +50,7 @@ StateType createPlayers(StateType incomingType, Player players[2],
 	if(getMappedValue(SWITCH_PLAYER_LENGTH, SWITCH_PLAYER, input)) {
 		if(!oldName)
 			currentPlayer->name = malloc(sizeof(char));
-		Ship *ships = generateShips(currentPlayer->grid);
+		Ship *ships = generateShips(currentPlayer->gridDimensions);
 		memcpy(currentPlayer->ships, ships, SHIP_TYPES * sizeof(*ships));
 		++*currentPlayerIndex;
 		if(*currentPlayerIndex > 1) {
@@ -60,5 +60,13 @@ StateType createPlayers(StateType incomingType, Player players[2],
 		return DRAW_CREATE_PLAYERS;
 	}
 
+	if(!currentPlayer->hits) {
+		players[*currentPlayerIndex].hits =
+			calloc((size_t)currentPlayer->gridDimensions.x *
+					   currentPlayer->gridDimensions.y,
+				   sizeof(*currentPlayer->hits));
+		if(!currentPlayer->hits)
+			return QUIT;
+	}
 	return CREATE_PLAYERS;
 }

@@ -4,6 +4,7 @@
 #include "cursor.h"
 #include "grid.h"
 #include "state.h"
+#include <stddef.h>
 
 typedef struct Player {
 	char *name;
@@ -13,13 +14,21 @@ typedef struct Player {
 
 	Cursor cursor;
 
-	Grid *grid;
-	Ship ships[SHIP_TYPES];
-} Player;
+	Vector2 gridDimensions;
 
-Player createPlayer(char *name, Grid *grid, Ship *ships);
+	Ship ships[SHIP_TYPES];
+
+	HitInfo *hits;
+} Player;
 
 void selectShip(Player *player, int index);
 void deselectShip(Player *player);
+
+int getIndex(int x, int y, int width);
+
+bool alreadyHit(int x, int y, HitInfo *hits, int gridWidth);
+HitInfo getHitInfo(Player *enemy, Vector2 hitLocation, HitInfo *hits);
+
+HitInfo attack(Player *player, Vector2 hitLocation, Player *enemy);
 
 #endif // SRC_PLAYER_H_

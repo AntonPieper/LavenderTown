@@ -7,7 +7,7 @@
 #include <curses.h>
 
 static const KeyMapping UP[] = {'w', 1,  KEY_UP,   1,  'k', 1,
-									 's', -1, KEY_DOWN, -1, 'j', -1};
+								's', -1, KEY_DOWN, -1, 'j', -1};
 static const size_t UP_LENGTH = sizeof(UP) / sizeof(UP[0]);
 
 static const KeyMapping RIGHT[] = {'d', 1,  KEY_RIGHT, 1,  'l', 1,
@@ -25,7 +25,7 @@ static const size_t GRAB_SHIP_LENGTH = sizeof(GRAB_SHIP) / sizeof(GRAB_SHIP[0]);
 
 static const KeyMapping SWITCH_PLAYER[] = {'\n', 1, KEY_ENTER, 1};
 static const size_t SWITCH_PLAYER_LENGTH =
-	sizeof(GRAB_SHIP) / sizeof(GRAB_SHIP[0]);
+	sizeof(SWITCH_PLAYER) / sizeof(SWITCH_PLAYER[0]);
 
 static const KeyMapping EXIT[] = {KEY_END, 1, 27, 1, 3, 1};
 static const size_t EXIT_LENGTH = sizeof(EXIT) / sizeof(EXIT[0]);
@@ -34,7 +34,7 @@ StateType handleMovement(Player *player, Ship *currentShip, int dx, int dy);
 StateType handleRotation(Player *player, Ship *currentShip, int rotateRight);
 StateType handleSwitchShip(Player *player, int input);
 StateType handleGrabShip(Player *player, Ship *currentShip);
-StateType handleSwitchPlayers(Player players[2], int *currentPlayerIndex);
+StateType handleAttack(Player players[2], int *currentPlayerIndex);
 
 StateType arrangeShips(StateType incomingType, Player players[2],
 					   int *currentPlayerIndex, int input) {
@@ -59,7 +59,7 @@ StateType arrangeShips(StateType incomingType, Player players[2],
 		return handleGrabShip(player, currentShip);
 
 	if(getMappedValue(SWITCH_PLAYER_LENGTH, SWITCH_PLAYER, input))
-		return handleSwitchPlayers(players, currentPlayerIndex);
+		return handleAttack(players, currentPlayerIndex);
 
 	if(getMappedValue(EXIT_LENGTH, EXIT, input))
 		return QUIT;
@@ -72,7 +72,7 @@ StateType handleMovement(Player *player, Ship *currentShip, int dx, int dy) {
 		Ship newShip = *currentShip;
 		newShip.x += dx;
 		newShip.y += dy;
-		if(!shipInsideBounds(&newShip, getGridBounds(player->grid)))
+		if(!shipInsideBounds(&newShip, getGridBounds(player->gridDimensions)))
 			return ARRANGE_SHIPS;
 		currentShip->x += dx;
 		currentShip->y += dy;
@@ -83,7 +83,7 @@ StateType handleMovement(Player *player, Ship *currentShip, int dx, int dy) {
 		Cursor newCursor = player->cursor;
 		newCursor.x += dx;
 		newCursor.y += dy;
-		if(!cursorInsideBounds(newCursor, getGridBounds(player->grid)))
+		if(!cursorInsideBounds(newCursor, getGridBounds(player->gridDimensions)))
 			return ARRANGE_SHIPS;
 		player->currentShip = getShipIndexAtPosition(newCursor, player->ships);
 		player->cursor.x += dx;
@@ -95,7 +95,7 @@ StateType handleRotation(Player *player, Ship *currentShip, int rotateRight) {
 	if(player->isHoldingShip) {
 		Ship newShip = *currentShip;
 		newShip.orientation = (newShip.orientation + rotateRight) % DIRECTIONS;
-		if(shipInsideBounds(&newShip, getGridBounds(player->grid)))
+		if(shipInsideBounds(&newShip, getGridBounds(player->gridDimensions)))
 			currentShip->orientation = newShip.orientation;
 		return DRAW_ARRANGE_SHIPS;
 	}
@@ -107,7 +107,7 @@ StateType handleSwitchShip(Player *player, int input) {
 }
 StateType handleGrabShip(Player *player, Ship *currentShip) {
 	if(player->isHoldingShip) {
-		if(!isValidShipMove(player->ships, getGridBounds(player->grid),
+		if(!isValidShipMove(player->ships, getGridBounds(player->gridDimensions),
 							currentShip, currentShip))
 			return ARRANGE_SHIPS;
 		player->isHoldingShip = false;
@@ -121,7 +121,7 @@ StateType handleGrabShip(Player *player, Ship *currentShip) {
 	}
 	return ARRANGE_SHIPS;
 }
-StateType handleSwitchPlayers(Player players[2], int *currentPlayerIndex) {
+StateType handleAttack(Player players[2], int *currentPlayerIndex) {
 	++*currentPlayerIndex;
 	if(*currentPlayerIndex > 1) {
 		*currentPlayerIndex = 0;

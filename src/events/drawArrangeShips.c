@@ -1,37 +1,40 @@
 #include "events/drawArrangeShips.h"
 #include "state.h"
+#include <string.h>
 
 StateType drawArrangeShips(StateType incomingType, Player *currentPlayer,
-						   WINDOW *grid, WINDOW *name, WINDOW *info) {
+						   WINDOW *gridWindow, WINDOW *nameWindow,
+						   WINDOW *infoWindow) {
 	int rows = getmaxy(stdscr);
 	int columns = getmaxx(stdscr);
 	int size = rows - 2;
 
-	werase(grid);
-	werase(name);
-	mvwprintw(name, 0, size - (int)strlen(currentPlayer->name) / 2, "%s",
+	werase(gridWindow);
+	werase(nameWindow);
+	mvwprintw(nameWindow, 0, size - (int)strlen(currentPlayer->name) / 2, "%s",
 			  currentPlayer->name);
-	drawGrid(grid, currentPlayer->grid);
-	drawShips(grid, currentPlayer->ships, currentPlayer->grid,
+	drawGrid(gridWindow, currentPlayer->gridDimensions);
+	drawShips(gridWindow, currentPlayer->ships, currentPlayer->gridDimensions,
 			  currentPlayer->isHoldingShip ? currentPlayer->currentShip : -1);
 	if(!currentPlayer->isHoldingShip) {
-		drawCursor(grid, currentPlayer->grid, currentPlayer->cursor);
+		drawCursor(gridWindow, currentPlayer->gridDimensions,
+				   currentPlayer->cursor);
 	}
-	werase(info);
+	werase(infoWindow);
 	char *shipName = getShipTypeName(currentPlayer->currentShip);
-	mvwaddstr(info, 0, 0, "cursor: ");
-	wattron(info, A_BOLD);
-	wprintw(info, "%c%d", currentPlayer->cursor.x + 'A',
+	mvwaddstr(infoWindow, 0, 0, "cursor: ");
+	wattron(infoWindow, A_BOLD);
+	wprintw(infoWindow, "%c%d", currentPlayer->cursor.x + 'A',
 			currentPlayer->cursor.y + 1);
-	wattroff(info, A_BOLD);
-	waddstr(info, ", current ship: ");
+	wattroff(infoWindow, A_BOLD);
+	waddstr(infoWindow, ", current ship: ");
 	int color = getShipTypeColor(currentPlayer->currentShip);
-	wattron(info, COLOR_PAIR(color));
-	wprintw(info, "%s", shipName);
-	wattroff(info, COLOR_PAIR(color));
+	wattron(infoWindow, COLOR_PAIR(color));
+	wprintw(infoWindow, "%s", shipName);
+	wattroff(infoWindow, COLOR_PAIR(color));
 
-	wrefresh(info);
-	wrefresh(name);
+	wrefresh(infoWindow);
+	wrefresh(nameWindow);
 
 	return ARRANGE_SHIPS;
 }

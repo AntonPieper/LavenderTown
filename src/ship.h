@@ -9,7 +9,9 @@
 #define COLOR_CRUISER 3
 #define COLOR_SUBMARINE 4
 #define COLOR_DESTROYER 5
-#define COLOR_INVALID 6
+#define COLOR_NO_HIT 6
+#define COLOR_HIT 7
+#define COLOR_INVALID 8
 
 typedef enum Direction { DIR_UP, DIR_RIGHT, DIR_DOWN, DIR_LEFT } Orientation;
 #define DIRECTIONS 4
@@ -23,6 +25,7 @@ typedef enum ShipType {
 	DESTROYER
 } ShipType;
 #define SHIP_TYPES 5
+
 char *getShipTypeName(ShipType shipType);
 
 int getShipTypeLength(ShipType shipType);
@@ -32,7 +35,15 @@ typedef struct Ship {
 	Orientation orientation;
 	int x, y;
 	ShipType type;
+	bool sunk;
 } Ship;
+
+typedef enum HitType { INVALID_HIT, NO_HIT, HIT, DESTROYED } HitType;
+
+typedef struct HitInfo {
+	HitType type;
+	Ship *hitShip;
+} HitInfo;
 
 AABB getOccupiedCells(Ship ship);
 

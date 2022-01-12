@@ -15,8 +15,10 @@ set(SOURCES
     cursor.c
     drawing.c
     events/arrangeShips.c
+    events/attackMode.c
     events/createPlayers.c
     events/drawArrangeShips.c
+    events/drawAttackMode.c
     events/drawCreatePlayers.c
     grid.c
     input.c
