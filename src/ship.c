@@ -60,25 +60,27 @@ AABB getOccupiedCells(Ship ship) {
 		default: return (AABB){ship.x, ship.y, ship.x + len, ship.y};
 	}
 }
-Ship *getShipAtPosition(Vector2 position, Ship *ships) {
-	int shipId = getShipIndexAtPosition(position, ships);
+Ship *getShipAtPosition(Vector2 position, Ship ships[]) {
+	int shipId = getShipTypeAtPosition(position, ships);
 	if(shipId == -1)
 		return 0;
 	return &ships[shipId];
 }
-int getShipIndexAtPosition(Vector2 position, Ship *ships) {
+ShipType getShipTypeAtPosition(Vector2 position, Ship ships[]) {
 	for(int i = 0; i < SHIP_TYPES; ++i) {
 		if(pointInside(getOccupiedCells(ships[i]), position))
 			return i;
 	}
-	return -1;
+	return INVALID;
 }
 
-bool shipIsValid(Ship *ship, Ship *ships, int numShips, AABB bounds,
+bool shipIsValid(Ship *ship, Ship ships[], int numShips, AABB bounds,
 				 Ship *ignoredShip) {
 	AABB shipCells = getOccupiedCells(*ship);
 	if(!shipInsideBounds(ship, bounds))
 		return false;
+	if(!ships)
+		return true;
 	for(int i = 0; i < numShips; ++i) {
 		if(&ships[i] == ignoredShip)
 			continue;
@@ -87,7 +89,7 @@ bool shipIsValid(Ship *ship, Ship *ships, int numShips, AABB bounds,
 	}
 	return true;
 }
-bool isValidShipMove(Ship *ships, AABB bounds, Ship *currentShip,
+bool isValidShipMove(Ship ships[], AABB bounds, Ship *currentShip,
 					 Ship *newShip) {
 	return shipIsValid(newShip, ships, SHIP_TYPES, bounds, currentShip);
 }

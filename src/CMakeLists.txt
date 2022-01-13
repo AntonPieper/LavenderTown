@@ -14,10 +14,15 @@ set(SOURCES
     aabb.c
     cursor.c
     drawing.c
-    events/arrangeShips.c
-    events/createPlayers.c
-    events/drawArrangeShips.c
-    events/drawCreatePlayers.c
+    events/arrangeMode/arrangeShips.c
+    events/arrangeMode/drawArrangeShips.c
+    events/attackMode/attackPlayer.c
+    events/attackMode/drawAttackPlayer.c
+    events/attackMode/drawSwitchAttackingPlayer.c
+    events/attackMode/switchAttackingPlayer.c
+    events/createMode/createPlayers.c
+    events/createMode/drawCreatePlayers.c
+    events/switchPlayer.c
     grid.c
     input.c
     player.c

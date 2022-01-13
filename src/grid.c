@@ -4,37 +4,32 @@
 #include "ship.h"
 #include "vector.h"
 
-Grid *generateGrid(Vector2 size) {
-	Grid *grid = malloc(sizeof(Grid));
-	if(grid != NULL) {
-		grid->size = size;
-	}
-	return grid;
-}
+int getIndex(int x, int y, int width) { return x + y * width; }
 
-Ship generateShip(Grid *grid, int type) {
+Ship generateShip(Vector2 gridSize, int type) {
 	Ship ship;
-	ship.x = randRange(0, grid->size.x);
-	ship.y = randRange(0, grid->size.y);
+	ship.x = randRange(0, gridSize.x);
+	ship.y = randRange(0, gridSize.y);
 	ship.orientation = randRange(0, DIRECTIONS);
 	ship.type = type;
+	ship.sunk = false;
 
 	return ship;
 }
 
-Ship *generateShips(Grid *grid) {
+Ship *generateShips(Vector2 gridSize) {
 	Ship *const ships = malloc(SHIP_TYPES * sizeof(Ship));
-	const AABB bounds = getGridBounds(grid);
+	const AABB bounds = getGridBounds(gridSize);
 	for(int i = 0; i < SHIP_TYPES; ++i) {
 		bool validPosition = true;
 		do {
-			ships[i] = generateShip(grid, i);
+			ships[i] = generateShip(gridSize, i);
 			validPosition = shipIsValid(&ships[i], ships, i, bounds, 0);
 		} while(!validPosition);
 	}
 	return ships;
 }
 
-AABB getGridBounds(Grid *grid) {
-	return (AABB){0, 0, grid->size.x - 1, grid->size.y - 1};
+AABB getGridBounds(Vector2 gridSize) {
+	return (AABB){0, 0, gridSize.x - 1, gridSize.y - 1};
 }
