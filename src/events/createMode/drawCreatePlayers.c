@@ -1,6 +1,6 @@
-#include "events/drawCreatePlayers.h"
+#include "events/createMode/drawCreatePlayers.h"
 #include "drawing.h"
-#include "events/createPlayers.h"
+#include "events/createMode/createPlayers.h"
 #include "state.h"
 #include <string.h>
 
@@ -16,7 +16,7 @@ StateType drawCreatePlayers(StateType incomingType, Player *players,
 	int rows = getmaxy(window);
 	char *name = players[playerIndex].name;
 	int nameLength = name == NULL ? 0 : (int)strlen(name);
-	AABB box = {0};
+	AABB box;
 	box.min.x = (columns - nameLength - MESSAGE_LENGTH) / 2 - 4;
 	box.max.x = (columns + nameLength + MESSAGE_LENGTH) / 2 + 4;
 	box.min.y = rows / 2 - 2;
@@ -32,5 +32,6 @@ StateType drawCreatePlayers(StateType incomingType, Player *players,
 				  (columns - nameLength - MESSAGE_LENGTH - 1) / 2 +
 					  MESSAGE_LENGTH + 1,
 				  "%s", name);
+	wrefresh(window);
 	return CREATE_PLAYERS;
 }

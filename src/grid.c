@@ -4,6 +4,8 @@
 #include "ship.h"
 #include "vector.h"
 
+int getIndex(int x, int y, int width) { return x + y * width; }
+
 Ship generateShip(Vector2 gridSize, int type) {
 	Ship ship;
 	ship.x = randRange(0, gridSize.x);

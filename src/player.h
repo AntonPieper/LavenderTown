@@ -10,7 +10,7 @@ typedef struct Player {
 	char *name;
 
 	bool isHoldingShip;
-	int currentShip;
+	ShipType currentShip;
 
 	Cursor cursor;
 
@@ -23,8 +23,6 @@ typedef struct Player {
 
 void selectShip(Player *player, int index);
 void deselectShip(Player *player);
-
-int getIndex(int x, int y, int width);
 
 bool alreadyHit(int x, int y, HitInfo *hits, int gridWidth);
 HitInfo getHitInfo(Player *enemy, Vector2 hitLocation, HitInfo *hits);

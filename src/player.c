@@ -17,8 +17,6 @@ void selectShip(Player *player, int index) {
 
 void deselectShip(Player *player) { player->isHoldingShip = false; }
 
-int getIndex(int x, int y, int width) { return x + y * width; }
-
 bool alreadyHit(int x, int y, HitInfo *hits, int gridWidth) {
 	return hits[getIndex(x, y, gridWidth)].type != INVALID_HIT;
 }
@@ -34,7 +32,7 @@ HitInfo getHitInfo(Player *enemy, Vector2 hitLocation, HitInfo *hits) {
 	hitInfo.type = NO_HIT;
 	hitInfo.hitShip = NULL;
 
-	int shipIndex = getShipIndexAtPosition(hitLocation, enemy->ships);
+	int shipIndex = getShipTypeAtPosition(hitLocation, enemy->ships);
 	if(shipIndex == -1) {
 		return hitInfo;
 	}

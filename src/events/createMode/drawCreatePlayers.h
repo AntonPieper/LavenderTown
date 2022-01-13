@@ -1,5 +1,5 @@
-#ifndef SRC_STATE_DRAWCREATEPLAYERS_H
-#define SRC_STATE_DRAWCREATEPLAYERS_H
+#ifndef SRC_EVENTS_CREATEMODE_DRAWCREATEPLAYERS_H
+#define SRC_EVENTS_CREATEMODE_DRAWCREATEPLAYERS_H
 
 #include "drawing.h"
 #include "player.h"
@@ -8,4 +8,4 @@
 StateType drawCreatePlayers(StateType incomingType, Player *players,
 							int playerIndex, WINDOW *window);
 
-#endif // SRC_STATE_DRAWCREATEPLAYERS_H
+#endif // SRC_EVENTS_CREATEMODE_DRAWCREATEPLAYERS_H

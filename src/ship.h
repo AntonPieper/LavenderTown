@@ -18,6 +18,7 @@ typedef enum Direction { DIR_UP, DIR_RIGHT, DIR_DOWN, DIR_LEFT } Orientation;
 char *getOrientationName(Orientation orientation);
 
 typedef enum ShipType {
+	INVALID = -1,
 	CARRIER,
 	BATTLESHIP,
 	CRUISER,
@@ -50,15 +51,15 @@ AABB getOccupiedCells(Ship ship);
 ///
 /// \returns found ship, else NULL
 ///
-Ship *getShipAtPosition(Vector2 position, Ship *ships);
+Ship *getShipAtPosition(Vector2 position, Ship ships[]);
 ///
 /// \returns found ship, else -1
 ///
-int getShipIndexAtPosition(Vector2 position, Ship *ships);
+ShipType getShipTypeAtPosition(Vector2 position, Ship ships[]);
 
-bool shipIsValid(Ship *ship, Ship *ships, int numShips, AABB bounds,
+bool shipIsValid(Ship *ship, Ship ships[], int numShips, AABB bounds,
 				 Ship *ignoredShip);
-bool isValidShipMove(Ship *ships, AABB bounds, Ship *currentShip,
+bool isValidShipMove(Ship ships[], AABB bounds, Ship *currentShip,
 					 Ship *newShip);
 bool shipInsideBounds(Ship *ship, AABB bounds);
 
