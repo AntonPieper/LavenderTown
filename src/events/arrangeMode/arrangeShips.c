@@ -1,4 +1,5 @@
 #include "events/arrangeMode/arrangeShips.h"
+#include "events/switchPlayer.h"
 #include "input.h"
 #include "player.h"
 #include "ship.h"
@@ -127,10 +128,9 @@ StateType handleGrabShip(Player *player, Ship *currentShip) {
 StateType handleNextPlayer(Player players[2], int *currentPlayerIndex) {
 	players[*currentPlayerIndex].isHoldingShip = false;
 	players[*currentPlayerIndex].currentShip = INVALID;
-	++*currentPlayerIndex;
-	if(*currentPlayerIndex > 1) {
-		*currentPlayerIndex = 0;
-		return DRAW_ATTACK_MODE;
-	}
-	return DRAW_ARRANGE_SHIPS;
+	if(*currentPlayerIndex > 0)
+		return switchPlayerFullScreen(DRAW_ATTACK_MODE, players,
+									  currentPlayerIndex);
+	return switchPlayerFullScreen(DRAW_ARRANGE_SHIPS, players,
+								  currentPlayerIndex);
 }
