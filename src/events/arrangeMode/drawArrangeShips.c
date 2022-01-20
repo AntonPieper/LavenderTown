@@ -1,6 +1,6 @@
 #include "events/arrangeMode/drawArrangeShips.h"
-#include "drawing.h"
 #include "state.h"
+#include "util/drawing.h"
 #include <string.h>
 
 StateType drawArrangeShips(

@@ -1,8 +1,8 @@
 #ifndef SRC_SHIP_H_
 #define SRC_SHIP_H_
 
-#include "aabb.h"
-#include "vector.h"
+#include "util/aabb.h"
+#include "util/vector.h"
 
 #define COLOR_CARRIER 1
 #define COLOR_BATTLESHIP 2

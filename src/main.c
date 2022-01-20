@@ -8,9 +8,9 @@
 #include "events/createMode/drawCreatePlayers.h"
 #include "locale.h"
 #include "player.h"
-#include "random.h"
 #include "ship.h"
 #include "state.h"
+#include "util/random.h"
 #include <curses.h>
 #include <string.h>
 

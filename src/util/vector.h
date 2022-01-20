@@ -1,5 +1,5 @@
-#ifndef SRC_VECTOR_H_
-#define SRC_VECTOR_H_
+#ifndef SRC_UTIL_VECTOR_H
+#define SRC_UTIL_VECTOR_H
 
 #define VECTOR2_ONE ((Vector2){1, 1})
 
@@ -11,4 +11,4 @@ Vector2 rotate90(Vector2 v);
 Vector2 rotate180(Vector2 v);
 Vector2 rotate270(Vector2 v);
 
-#endif // SRC_VECTOR_H_
+#endif // SRC_UTIL_VECTOR_H

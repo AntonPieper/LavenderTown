@@ -1,7 +1,7 @@
 #include "drawing.h"
 #include "cursor.h"
 #include "ship.h"
-#include "vector.h"
+#include "util/vector.h"
 #include <curses.h>
 #include <stdint.h>
 #include <stdio.h>

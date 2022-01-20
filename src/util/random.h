@@ -1,5 +1,5 @@
-#ifndef SRC_RANDOM_H
-#define SRC_RANDOM_H
+#ifndef SRC_UTIL_RANDOM_H
+#define SRC_UTIL_RANDOM_H
 
 #include <stdlib.h>
 #include <time.h>
@@ -11,4 +11,4 @@ int randRange(int min, int max);
 
 unsigned int getSeed();
 
-#endif // SRC_RANDOM_H
+#endif // SRC_UTIL_RANDOM_H

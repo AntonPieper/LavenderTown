@@ -1,5 +1,5 @@
 #include "events/attackMode/drawAttackPlayer.h"
-#include "drawing.h"
+#include "util/drawing.h"
 
 void drawPlayerBoard(Player *currentPlayer, WINDOW *primaryWindow,
 					 Player *enemyPlayer, WINDOW *secondaryWindow) {

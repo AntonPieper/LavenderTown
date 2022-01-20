@@ -1,8 +1,8 @@
 #include "grid.h"
-#include "aabb.h"
-#include "random.h"
 #include "ship.h"
-#include "vector.h"
+#include "util/aabb.h"
+#include "util/random.h"
+#include "util/vector.h"
 
 int getIndex(int x, int y, int width) { return x + y * width; }
 

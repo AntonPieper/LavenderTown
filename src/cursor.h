@@ -1,8 +1,8 @@
 #ifndef SRC_CURSOR_H
 #define SRC_CURSOR_H
 
-#include "aabb.h"
-#include "vector.h"
+#include "util/aabb.h"
+#include "util/vector.h"
 
 typedef Vector2 Cursor;
 

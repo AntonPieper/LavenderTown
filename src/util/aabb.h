@@ -1,7 +1,7 @@
-#ifndef SRC_AABB_H_
-#define SRC_AABB_H_
+#ifndef SRC_UTIL_AABB_H
+#define SRC_UTIL_AABB_H
 
-#include "vector.h"
+#include "util/vector.h"
 #include <stdbool.h>
 
 typedef struct AABB {
@@ -14,4 +14,4 @@ bool inside(AABB outer, AABB inner);
 
 bool pointInside(AABB aabb, Vector2 p);
 
-#endif // SRC_AABB_H_
+#endif // SRC_UTIL_AABB_H

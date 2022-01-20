@@ -2,7 +2,7 @@
 #define SRC_GRID_H_
 
 #include "ship.h"
-#include "vector.h"
+#include "util/vector.h"
 
 int getIndex(int x, int y, int width);
 

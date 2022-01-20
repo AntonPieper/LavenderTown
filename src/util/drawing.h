@@ -1,5 +1,5 @@
-#ifndef SRC_DRAWING_H
-#define SRC_DRAWING_H
+#ifndef SRC_UTIL_DRAWING_H
+#define SRC_UTIL_DRAWING_H
 
 #include "cursor.h"
 #include "grid.h"
@@ -32,4 +32,4 @@ int getGridCellSizeY(WINDOW *window, Vector2 gridDimensions);
 
 Vector2 getGridCellSize(WINDOW *window, Vector2 gridDimensions);
 
-#endif // SRC_DRAWING_H
+#endif // SRC_UTIL_DRAWING_H

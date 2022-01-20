@@ -1,6 +1,6 @@
 #include "drawSwitchAttackingPlayer.h"
-#include "drawing.h"
 #include "events/attackMode/drawAttackPlayer.h"
+#include "util/drawing.h"
 
 StateType drawSwitchAttackingPlayer(
 	StateType incomingType, Player *players, int currentPlayerIndex,

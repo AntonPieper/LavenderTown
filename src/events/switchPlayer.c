@@ -1,7 +1,7 @@
 #include "events/switchPlayer.h"
-#include "drawing.h"
 #include "input.h"
 #include "state.h"
+#include "util/drawing.h"
 #include <stddef.h>
 #include <string.h>
 

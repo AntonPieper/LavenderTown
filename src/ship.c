@@ -1,5 +1,5 @@
 #include "ship.h"
-#include "aabb.h"
+#include "util/aabb.h"
 
 const int CARRIER_LENGTH = 5;
 const int BATTLESHIP_LENGTH = 4;
