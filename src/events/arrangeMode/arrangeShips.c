@@ -7,6 +7,7 @@
 #include <ctype.h>
 #include <curses.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <string.h>
 
 static const KeyMapping UP[] = {'w', 1,  KEY_UP,   1,  'k', 1,
@@ -41,7 +42,10 @@ StateType handleNextPlayer(Player players[2], int *currentPlayerIndex);
 
 StateType arrangeShips(StateType incomingType, Player players[2],
 					   int *currentPlayerIndex) {
-	int input = tolower(getInput(-1));
+	int input = getInput(-1);
+	if(input < INT8_MAX)
+		input = tolower(input);
+
 	Player *player = &players[*currentPlayerIndex];
 	Ship *currentShip = &player->ships[player->currentShip];
 

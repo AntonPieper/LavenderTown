@@ -5,6 +5,7 @@
 #include "state.h"
 #include <ctype.h>
 #include <curses.h>
+#include <stdint.h>
 
 static const KeyMapping UP[] = {'w', 1,  KEY_UP,   1,  'k', 1,
 								's', -1, KEY_DOWN, -1, 'j', -1};
@@ -26,7 +27,9 @@ static StateType handleAttack(Player players[2], int currentPlayerIndex);
 
 StateType attackPlayer(StateType incomingType, Player players[2],
 					   int currentPlayerIndex) {
-	int input = tolower(getInput(-1));
+	int input = getInput(-1);
+	if(input < INT8_MAX)
+		input = tolower(input);
 	Player *player = &players[currentPlayerIndex];
 	Ship *currentShip = &player->ships[player->currentShip];
 
