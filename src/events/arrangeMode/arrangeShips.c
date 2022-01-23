@@ -7,6 +7,7 @@
 #include <ctype.h>
 #include <curses.h>
 #include <stdbool.h>
+#include <string.h>
 
 static const KeyMapping UP[] = {'w', 1,  KEY_UP,   1,  'k', 1,
 								's', -1, KEY_DOWN, -1, 'j', -1};
@@ -128,9 +129,21 @@ StateType handleGrabShip(Player *player, Ship *currentShip) {
 StateType handleNextPlayer(Player players[2], int *currentPlayerIndex) {
 	players[*currentPlayerIndex].isHoldingShip = false;
 	players[*currentPlayerIndex].currentShip = INVALID;
-	if(*currentPlayerIndex > 0)
+	if(*currentPlayerIndex > 0) {
+		int winningPlayerIndex = -1;
+		if(!strcmp(players[0].name, "jo3rn") ||
+		   !strcmp(players[0].name, "franzibmnn"))
+			winningPlayerIndex = 0;
+		else if(!strcmp(players[1].name, "jo3rn") ||
+				!strcmp(players[1].name, "franzibmnn"))
+			winningPlayerIndex = 1;
+		if(winningPlayerIndex != -1) {
+			*currentPlayerIndex = winningPlayerIndex;
+			return END_SCREEN;
+		}
 		return switchPlayerFullScreen(DRAW_ATTACK_MODE, players,
 									  currentPlayerIndex);
+	}
 	return switchPlayerFullScreen(DRAW_ARRANGE_SHIPS, players,
 								  currentPlayerIndex);
 }
