@@ -6,6 +6,7 @@
 #include "events/attackMode/switchAttackingPlayer.h"
 #include "events/createMode/createPlayers.h"
 #include "events/createMode/drawCreatePlayers.h"
+#include "events/endScreen/endScreen.h"
 #include "locale.h"
 #include "player.h"
 #include "ship.h"
@@ -57,6 +58,9 @@ StateType handleState(StateType incomingType, World *world) {
 				incomingType, world->players, world->currentPlayerIndex,
 				world->enemyWindow, world->gridWindow, world->nameWindow,
 				world->infoWindow);
+		case END_SCREEN:
+			return endScreen(world->players, world->currentPlayerIndex);
+
 		default: return incomingType;
 	}
 }

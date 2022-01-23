@@ -64,15 +64,25 @@ static StateType handleMovement(Player *players, int currentPlayerIndex,
 }
 static StateType handleAttack(Player players[2], int currentPlayerIndex) {
 	Player *player = &players[currentPlayerIndex];
+	Player *enemy = &players[1 - currentPlayerIndex];
+
 	int shotIndex =
 		getIndex(player->cursor.x, player->cursor.y, player->gridDimensions.x);
 
 	if(player->hits[shotIndex].type)
 		return ATTACK_MODE;
 
-	attack(player, player->cursor, &players[1 - currentPlayerIndex]);
+	attack(player, player->cursor, enemy);
 
-	//*currentPlayerIndex = 1 - *currentPlayerIndex;
+	const Ship *enemyShips = enemy->ships;
 
+	bool isWinner = true;
+
+	for(int i = 0; i < SHIP_TYPES; i++) {
+		isWinner = isWinner && enemyShips[i].sunk;
+	}
+	if(isWinner) {
+		return END_SCREEN;
+	}
 	return DRAW_SWITCH_ATTACKING_PLAYER;
 }

@@ -24,7 +24,7 @@ StateType drawCreatePlayers(StateType incomingType, Player *players,
 	drawBox(window, box);
 	mvwprintw(window, box.min.y,
 			  (columns - PLAYER_INDEX_MESSAGE_LENGTH - 2) / 2, "%s %1d",
-			  PLAYER_INDEX_MESSAGE, playerIndex);
+			  PLAYER_INDEX_MESSAGE, playerIndex + 1);
 	mvwprintw(window, rows / 2, (columns - nameLength - MESSAGE_LENGTH - 1) / 2,
 			  "%s", MESSAGE);
 	if(name != NULL)
