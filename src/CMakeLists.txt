@@ -21,6 +21,8 @@ set(SOURCES
     events/createMode/createPlayers.c
     events/createMode/drawCreatePlayers.c
     events/switchPlayer.c
+    events/endScreen/drawEndScreen.c
+    events/endScreen/endScreen.c
     grid.c
     input.c
     player.c
