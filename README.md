@@ -14,6 +14,20 @@
     A battleship game.
 </p>
 
+## Controls
+
+| key                          | description        |
+|------------------------------|--------------------|
+| `w`, `k`, `↑`                | move up            |
+| `a`, `h`, `←`                | move left          |
+| `s`, `j`, `↓`                | move down          |
+| `d`, `l`, `→`                | move right         |
+| `q`, `PgDn`, `Previous`, `u` | rotate ship left   |
+| `e`, `PgUp`, `Next`, `i`     | rotate ship right  |
+| ` ␣ `                        | Place ship, Attack |
+| `⏎`                          | Confirm, Attack    |
+| `ESC`, `Ctrl`+`C`            | Exit program       |
+
 ## Building
 
 ### MacOS
@@ -41,7 +55,7 @@ Then you can continue with [Building with CMake](#building-with-cmake)
 
 Windows is not Unix-based. Therefore `ncurses` is not available.
 To circumvent this, you can use [MSYS2](https://www.msys2.org).\
-Download and run the Installer from the website and then
+Download and run the Installer from the site and then
 run the `MSYS2 MSYS` Shortcut from the Start Menu.\
 Inside this terminal, run the following commands:
 

@@ -16,7 +16,10 @@
 #include <curses.h>
 #include <string.h>
 
-const int GRID_SIZE = 10;
+static const int GRID_SIZE = 10;
+
+static const int MIN_REQUIRED_SIZE_X = 69;
+static const int MIN_REQUIRED_SIZE_Y = 37;
 
 typedef struct World {
 	Player players[2];
@@ -63,6 +66,19 @@ int main() {
 	setlocale(LC_ALL, "");
 	srand(getSeed());
 	initscr(); // start curses mode
+
+	int rows = getmaxy(stdscr);
+	int columns = getmaxx(stdscr);
+
+	if(columns < MIN_REQUIRED_SIZE_X || rows < MIN_REQUIRED_SIZE_Y) {
+		endwin();
+		fprintf(stderr, "Your terminal is too small!\n");
+		fprintf(stderr, "Your terminal size:     {x: %d, y: %d}\n", columns,
+				rows);
+		fprintf(stderr, "Minimum terminal size:  {x: %d, y: %d}\n",
+				MIN_REQUIRED_SIZE_X, MIN_REQUIRED_SIZE_Y);
+		return -1;
+	}
 	if(has_colors() == false) {
 		endwin();
 		printf("Your terminal does not support color\n");
@@ -80,11 +96,8 @@ int main() {
 	init_pair(COLOR_NO_HIT, COLOR_WHITE, COLOR_BLACK);
 	init_pair(COLOR_HIT, COLOR_RED, COLOR_BLACK);
 
-	int rows = getmaxy(stdscr);
-	int columns = getmaxx(stdscr);
 	int size = rows - 2;
-	// if(columns < size * 2)
-	//	size = columns / 2;
+
 	int trackingGridSize = GRID_SIZE + 2;
 	int primaryGridSize = size - trackingGridSize;
 
