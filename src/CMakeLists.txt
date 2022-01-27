@@ -1,11 +1,6 @@
-if(UNIX)
-    find_package(Curses REQUIRED)
-    include_directories(${CURSES_INCLUDE_DIR})
-else(WIN32)
-    include_directories(${PROJECT_NAME} PRIVATE ${LavenderTown_SOURCE_DIR}/include)
-    link_directories(${LavenderTown_SOURCE_DIR}/lib)
-    set(CURSES_LIBRARIES pdcurses)
-endif(UNIX)
+find_package(Curses REQUIRED)
+
+include_directories(${CURSES_INCLUDE_DIR})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
