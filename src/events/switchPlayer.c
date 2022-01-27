@@ -12,9 +12,11 @@ static const int SWITCH_PLAYER_STRING_LENGTH =
 static const char PROMPT_STRING[] = "Press any key to continue";
 static const int PROMPT_STRING_LENGTH =
 	sizeof(PROMPT_STRING) / sizeof(*PROMPT_STRING) - 1;
+
 StateType switchPlayer(StateType incomingType, Player *players,
 					   int *currentPlayerIndex, WINDOW *window) {
 	werase(window);
+
 	const int columns = getmaxx(window);
 	const int rows = getmaxy(window);
 	*currentPlayerIndex = 1 - *currentPlayerIndex;
@@ -40,6 +42,8 @@ StateType switchPlayer(StateType incomingType, Player *players,
 	mvwprintw(window, rows / 2 + 2, (columns - PROMPT_STRING_LENGTH) / 2, "%s",
 			  PROMPT_STRING);
 	drawBox(window, box);
+
+	wrefresh(window);
 
 	getInput(-1);
 	return incomingType;

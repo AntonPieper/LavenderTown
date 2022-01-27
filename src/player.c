@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-const int MAX_PLAYER_NAME_LENGTH = 64;
+static const int MAX_PLAYER_NAME_LENGTH = 64;
 
-const char ENTER_YOUR_NAME_MESSAGE[] = "Enter your name: ";
+static const char ENTER_YOUR_NAME_MESSAGE[] = "Enter your name: ";
 
 void selectShip(Player *player, int index) {
 	if(index > -1 && index < SHIP_TYPES) {

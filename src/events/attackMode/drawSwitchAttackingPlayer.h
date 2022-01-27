@@ -3,11 +3,11 @@
 
 #include "player.h"
 #include "state.h"
+#include "windows.h"
 #include <curses.h>
 
 StateType drawSwitchAttackingPlayer(StateType incomingType, Player *players,
-									int currentPlayerIndex, WINDOW *enemyWindow,
-									WINDOW *gridWindow, WINDOW *nameWindow,
-									WINDOW *infoWindow);
+									int currentPlayerIndex,
+									PlayerWindows windows);
 
 #endif // SRC_EVENTS_ATTACKMODE_DRAWSWITCHATTACKINGPLAYER

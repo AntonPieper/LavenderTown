@@ -21,7 +21,6 @@ set(SOURCES
     events/createMode/createPlayers.c
     events/createMode/drawCreatePlayers.c
     events/switchPlayer.c
-    events/endScreen/drawEndScreen.c
     events/endScreen/endScreen.c
     grid.c
     input.c
@@ -31,6 +30,7 @@ set(SOURCES
     util/drawing.c
     util/random.c
     util/vector.c
+    windows.c
 )
 
 add_executable (${PROJECT_NAME} ${SOURCES})

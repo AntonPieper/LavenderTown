@@ -1,29 +1,25 @@
 #include "drawSwitchAttackingPlayer.h"
 #include "events/attackMode/drawAttackPlayer.h"
 #include "util/drawing.h"
+#include "windows.h"
 
-StateType drawSwitchAttackingPlayer(
-	StateType incomingType, Player *players, int currentPlayerIndex,
-	WINDOW *enemyWindow, // NOLINT(bugprone-easily-swappable-parameters)
-	WINDOW *gridWindow, WINDOW *nameWindow, WINDOW *infoWindow) {
+StateType drawSwitchAttackingPlayer(StateType incomingType, Player *players,
+									int currentPlayerIndex,
+									PlayerWindows windows) {
 	Player *const currentPlayer = &players[currentPlayerIndex];
 	Player *const enemyPlayer = &players[1 - currentPlayerIndex];
 
-	werase(enemyWindow);
-	werase(gridWindow);
-	werase(nameWindow);
-	werase(infoWindow);
+	eraseAllWindows(&windows);
 
-	drawNameInCenter(nameWindow, currentPlayer->name);
+	drawNameInCenter(windows.name, currentPlayer->name);
 
-	drawPlayerBoard(currentPlayer, gridWindow, enemyPlayer, enemyWindow);
+	drawPlayerBoard(currentPlayer, windows.primary, enemyPlayer,
+					windows.tracking);
 
-	drawStats(infoWindow, currentPlayer->currentShip, currentPlayer->cursor);
+	drawStats(windows.info, currentPlayer->currentShip, currentPlayer->cursor);
 
-	wrefresh(infoWindow);
-	wrefresh(enemyWindow);
-	wrefresh(gridWindow);
-	wrefresh(nameWindow);
+	overwriteMainWindow(&windows);
+	wrefresh(windows.main);
 
 	return SWITCH_ATTACKING_PLAYER;
 }

@@ -1,12 +1,14 @@
 #include "ship.h"
 #include "util/aabb.h"
 
-const int CARRIER_LENGTH = 5;
-const int BATTLESHIP_LENGTH = 4;
-const int CRUISER_LENGTH = 3;
-const int SUBMARINE_LENGTH = 3;
-const int DESTROYER_LENGTH = 2;
-
+static const int CARRIER_LENGTH = 5;
+static const int BATTLESHIP_LENGTH = 4;
+static const int CRUISER_LENGTH = 3;
+static const int SUBMARINE_LENGTH = 3;
+static const int DESTROYER_LENGTH = 2;
+static const int SHIP_LENGTHS[SHIP_TYPES] = {CARRIER_LENGTH, BATTLESHIP_LENGTH,
+											 CRUISER_LENGTH, SUBMARINE_LENGTH,
+											 DESTROYER_LENGTH};
 char *getOrientationName(Orientation orientation) {
 	switch(orientation) {
 		case DIR_UP: return "UP";
@@ -29,14 +31,9 @@ char *getShipTypeName(ShipType shipType) {
 }
 
 int getShipTypeLength(ShipType shipType) {
-	switch(shipType) {
-		case CARRIER: return CARRIER_LENGTH;
-		case BATTLESHIP: return BATTLESHIP_LENGTH;
-		case CRUISER: return CRUISER_LENGTH;
-		case SUBMARINE: return SUBMARINE_LENGTH;
-		case DESTROYER: return DESTROYER_LENGTH;
-		default: return 0;
-	}
+	if(shipType < 0 || shipType >= SHIP_TYPES)
+		return 0;
+	return SHIP_LENGTHS[shipType];
 }
 
 int getShipTypeColor(ShipType shipType) {

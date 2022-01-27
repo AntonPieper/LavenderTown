@@ -1,15 +1,16 @@
 #include "events/attackMode/drawAttackPlayer.h"
 #include "util/drawing.h"
+#include "windows.h"
 
 void drawPlayerBoard(Player *currentPlayer, WINDOW *primaryWindow,
-					 Player *enemyPlayer, WINDOW *secondaryWindow) {
-	drawGrid(secondaryWindow, currentPlayer->gridDimensions);
-	drawHitMarkers(secondaryWindow, currentPlayer->gridDimensions,
+					 Player *enemyPlayer, WINDOW *trackingWindow) {
+	drawGrid(trackingWindow, currentPlayer->gridDimensions);
+	drawHitMarkers(trackingWindow, currentPlayer->gridDimensions,
 				   enemyPlayer->hits);
+	drawShips(trackingWindow, currentPlayer->ships,
+			  currentPlayer->gridDimensions, -1);
 	drawHitMarkers(primaryWindow, enemyPlayer->gridDimensions,
 				   currentPlayer->hits);
-	drawShips(secondaryWindow, currentPlayer->ships,
-			  currentPlayer->gridDimensions, -1);
 
 	drawGrid(primaryWindow, enemyPlayer->gridDimensions);
 
@@ -17,29 +18,23 @@ void drawPlayerBoard(Player *currentPlayer, WINDOW *primaryWindow,
 				 currentPlayer->hits);
 }
 
-StateType drawAttackPlayer(
-	StateType incomingType, Player *players, int currentPlayerIndex,
-	WINDOW *enemyWindow, // NOLINT(bugprone-easily-swappable-parameters)
-	WINDOW *gridWindow, WINDOW *nameWindow, WINDOW *infoWindow) {
+StateType drawAttackPlayer(StateType incomingType, Player *players,
+						   int currentPlayerIndex, PlayerWindows windows) {
 	Player *const currentPlayer = &players[currentPlayerIndex];
 	Player *const enemyPlayer = &players[1 - currentPlayerIndex];
 
-	werase(enemyWindow);
-	werase(gridWindow);
-	werase(nameWindow);
-	werase(infoWindow);
+	eraseAllWindows(&windows);
 
-	drawNameInCenter(nameWindow, currentPlayer->name);
-	drawPlayerBoard(currentPlayer, gridWindow, enemyPlayer, enemyWindow);
+	drawNameInCenter(windows.name, currentPlayer->name);
+	drawPlayerBoard(currentPlayer, windows.primary, enemyPlayer,
+					windows.tracking);
 
-	drawCursor(gridWindow, currentPlayer->gridDimensions,
+	drawCursor(windows.primary, currentPlayer->gridDimensions,
 			   currentPlayer->cursor);
-	drawStats(infoWindow, currentPlayer->currentShip, currentPlayer->cursor);
+	drawStats(windows.info, currentPlayer->currentShip, currentPlayer->cursor);
 
-	wrefresh(infoWindow);
-	wrefresh(enemyWindow);
-	wrefresh(gridWindow);
-	wrefresh(nameWindow);
+	overwriteMainWindow(&windows);
+	wrefresh(windows.main);
 
 	return ATTACK_MODE;
 }

@@ -12,17 +12,15 @@
 #include "ship.h"
 #include "state.h"
 #include "util/random.h"
+#include "windows.h"
 #include <curses.h>
 #include <string.h>
 
 const int GRID_SIZE = 10;
 
 typedef struct World {
-	WINDOW *enemyWindow;
-	WINDOW *gridWindow;
-	WINDOW *nameWindow;
-	WINDOW *infoWindow;
 	Player players[2];
+	PlayerWindows windows;
 	int currentPlayerIndex;
 } World;
 
@@ -33,33 +31,29 @@ StateType handleState(StateType incomingType, World *world) {
 								 &world->currentPlayerIndex);
 		case DRAW_CREATE_PLAYERS:
 			return drawCreatePlayers(incomingType, world->players,
-									 world->currentPlayerIndex, stdscr);
+									 world->currentPlayerIndex, world->windows);
 		case ARRANGE_SHIPS:
 			return arrangeShips(incomingType, world->players,
 								&world->currentPlayerIndex);
 		case DRAW_ARRANGE_SHIPS:
 			return drawArrangeShips(incomingType, world->players,
-									world->currentPlayerIndex,
-									world->enemyWindow, world->gridWindow,
-									world->nameWindow, world->infoWindow);
+									world->currentPlayerIndex, world->windows);
 		case ATTACK_MODE:
 			return attackPlayer(incomingType, world->players,
 								world->currentPlayerIndex);
 		case DRAW_ATTACK_MODE:
 			return drawAttackPlayer(incomingType, world->players,
-									world->currentPlayerIndex,
-									world->enemyWindow, world->gridWindow,
-									world->nameWindow, world->infoWindow);
+									world->currentPlayerIndex, world->windows);
 		case SWITCH_ATTACKING_PLAYER:
 			return switchAttackingPlayer(incomingType, world->players,
 										 &world->currentPlayerIndex);
 		case DRAW_SWITCH_ATTACKING_PLAYER:
-			return drawSwitchAttackingPlayer(
-				incomingType, world->players, world->currentPlayerIndex,
-				world->enemyWindow, world->gridWindow, world->nameWindow,
-				world->infoWindow);
+			return drawSwitchAttackingPlayer(incomingType, world->players,
+											 world->currentPlayerIndex,
+											 world->windows);
 		case END_SCREEN:
-			return endScreen(world->players, world->currentPlayerIndex);
+			return endScreen(world->players, world->currentPlayerIndex,
+							 world->windows);
 
 		default: return incomingType;
 	}
@@ -91,26 +85,25 @@ int main() {
 	int size = rows - 2;
 	// if(columns < size * 2)
 	//	size = columns / 2;
-	int enemyGridSize = GRID_SIZE + 2;
-	int playerGridSize = size - enemyGridSize;
-
-	WINDOW *enemyWindow = newwin(enemyGridSize, enemyGridSize * 2, 1, 0);
-	WINDOW *gridWindow = newwin(playerGridSize, playerGridSize * 2,
-								1 + enemyGridSize, enemyGridSize * 2);
-	WINDOW *nameWindow = newwin(1, size * 2, 0, 0);
-	WINDOW *infoWindow = newwin(1, size * 2, rows - 1, 0);
-	refresh();
+	int trackingGridSize = GRID_SIZE + 2;
+	int primaryGridSize = size - trackingGridSize;
 
 	World world = {0};
-
-	world.enemyWindow = enemyWindow;
-	world.gridWindow = gridWindow;
-	world.infoWindow = infoWindow;
-	world.nameWindow = nameWindow;
 
 	Vector2 gridDimensions = {GRID_SIZE, GRID_SIZE};
 	world.players[0].gridDimensions = gridDimensions;
 	world.players[1].gridDimensions = gridDimensions;
+
+	WINDOW *mainWindow = newwin(0, 0, 0, 0);
+	world.windows.main = mainWindow;
+	world.windows.primary = newwin(primaryGridSize, primaryGridSize * 2,
+								   1 + trackingGridSize, trackingGridSize * 2);
+	world.windows.tracking =
+		newwin(trackingGridSize, trackingGridSize * 2, 1, 0);
+	world.windows.name = newwin(1, size * 2, 0, 0);
+	;
+	world.windows.info = newwin(1, size * 2, rows - 1, 0);
+	refresh();
 
 	noecho();
 	keypad(stdscr, true);
