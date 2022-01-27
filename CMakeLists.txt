@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(LavenderTown)
-if(EXISTS ${CMAKE_SOURCE_DIR}/.clangd.in)
-    configure_file(.clangd.in ${CMAKE_SOURCE_DIR}/.clangd @ONLY)
-endif()
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_subdirectory(src)
