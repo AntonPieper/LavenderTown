@@ -1,41 +1,34 @@
 #include "events/arrangeMode/drawArrangeShips.h"
 #include "state.h"
 #include "util/drawing.h"
+#include "windows.h"
 #include <string.h>
 
-StateType drawArrangeShips(
-	StateType incomingType, Player *players, int currentPlayerIndex,
-	WINDOW *enemyWindow, // NOLINT(bugprone-easily-swappable-parameters)
-	WINDOW *gridWindow, WINDOW *nameWindow, WINDOW *infoWindow) {
+StateType drawArrangeShips(StateType incomingType, Player *players,
+						   int currentPlayerIndex, PlayerWindows windows) {
 	int rows = getmaxy(stdscr);
 	int columns = getmaxx(stdscr);
 	int size = rows - 2;
 
 	Player *currentPlayer = &players[currentPlayerIndex];
 
-	werase(enemyWindow);
-	werase(gridWindow);
-	werase(nameWindow);
-	werase(infoWindow);
+	eraseAllWindows(&windows);
 
-	drawNameInCenter(nameWindow, currentPlayer->name);
+	drawNameInCenter(windows.name, currentPlayer->name);
 
-	drawGrid(enemyWindow, players[1 - currentPlayerIndex].gridDimensions);
-	drawGrid(gridWindow, currentPlayer->gridDimensions);
-	drawShips(gridWindow, currentPlayer->ships, currentPlayer->gridDimensions,
-			  currentPlayer->isHoldingShip ? (int)currentPlayer->currentShip
-										   : -1);
+	drawGrid(windows.tracking, players[1 - currentPlayerIndex].gridDimensions);
+	drawGrid(windows.primary, currentPlayer->gridDimensions);
+	drawShips(windows.primary, currentPlayer->ships,
+			  currentPlayer->gridDimensions,
+			  currentPlayer->isHoldingShip ? currentPlayer->currentShip : -1);
 	if(!currentPlayer->isHoldingShip) {
-		drawCursor(gridWindow, currentPlayer->gridDimensions,
+		drawCursor(windows.primary, currentPlayer->gridDimensions,
 				   currentPlayer->cursor);
 	}
 
-	drawStats(infoWindow, currentPlayer->currentShip, currentPlayer->cursor);
+	drawStats(windows.info, currentPlayer->currentShip, currentPlayer->cursor);
 
-	wrefresh(infoWindow);
-	wrefresh(enemyWindow);
-	wrefresh(gridWindow);
-	wrefresh(nameWindow);
-
+	overwriteMainWindow(&windows);
+	wrefresh(windows.main);
 	return ARRANGE_SHIPS;
 }

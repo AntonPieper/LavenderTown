@@ -4,8 +4,9 @@
 #include "player.h"
 #include "state.h"
 #include "util/drawing.h"
+#include "windows.h"
 
 StateType drawCreatePlayers(StateType incomingType, Player *players,
-							int playerIndex, WINDOW *window);
+							int playerIndex, PlayerWindows windows);
 
 #endif // SRC_EVENTS_CREATEMODE_DRAWCREATEPLAYERS_H
