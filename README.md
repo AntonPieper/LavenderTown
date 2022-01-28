@@ -16,17 +16,18 @@
 
 ## Controls
 
-| key                          | description        |
-|------------------------------|--------------------|
-| `w`, `k`, `↑`                | move up            |
-| `a`, `h`, `←`                | move left          |
-| `s`, `j`, `↓`                | move down          |
-| `d`, `l`, `→`                | move right         |
-| `q`, `PgDn`, `Previous`, `u` | rotate ship left   |
-| `e`, `PgUp`, `Next`, `i`     | rotate ship right  |
-| ` ␣ `                        | Place ship, Attack |
-| `⏎`                          | Confirm, Attack    |
-| `ESC`, `Ctrl`+`C`            | Exit program       |
+| key                          | description                           |
+|------------------------------|---------------------------------------|
+| `w`, `k`, `↑`                | move up                               |
+| `a`, `h`, `←`                | move left                             |
+| `s`, `j`, `↓`                | move down                             |
+| `d`, `l`, `→`                | move right                            |
+| `q`, `PgDn`, `Previous`, `u` | rotate ship left                      |
+| `e`, `PgUp`, `Next`, `i`     | rotate ship right                     |
+| ` ␣ `, `Home`                | place ship, attack                    |
+| `⏎`                          | confirm, attack                       |
+| `ESC`, `Ctrl`+`C` , `End`    | exit program                          |
+| `1`, `2`, `3`, `4`, `5`      | grab ship with<br>corresponding index |
 
 ## Building
 
@@ -65,7 +66,7 @@ Inside this terminal, run the following commands:
     pacman -Syu
     ```
 
-2. Install `base-devel`, `gcc`, `cmake`, `ncurses` and `ncurses-devel`
+2. Install `base-devel`, `gcc`, `cmake` and `ncurses-devel`
 
     ```sh
     pacman -S base-devel gcc cmake ncurses ncurses-devel
@@ -103,7 +104,10 @@ Make sure that you are in the root of this Repository.
     ```
 
 After building, the binary named `LavenderTown`
-(`LavenderTown.exe` on Windows) is located under `build/bin`.
+(`LavenderTown.exe` on Windows) is located under `bin/<system>-<arch>`,
+where `<system>` is your Operating System (e.g. "darwin" under MacOS,
+or "linux" under Linux Distributions) and `<arch>` is your processors
+architecture (e.g. "x86_64" or "aarch64").
 
 ## Roles
 

@@ -1,5 +1,5 @@
-#ifndef SRC_GRID_H_
-#define SRC_GRID_H_
+#ifndef SRC_GRID_H
+#define SRC_GRID_H
 
 #include "ship.h"
 #include "util/vector.h"
@@ -10,4 +10,4 @@ Ship *generateShips(Vector2 gridSize);
 
 AABB getGridBounds(Vector2 gridSize);
 
-#endif // SRC_GRID_H_
+#endif // SRC_GRID_H

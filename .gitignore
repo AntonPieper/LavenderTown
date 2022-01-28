@@ -1,4 +1,8 @@
 build/
+bin/
+cmake-build-*/
+.devcontainer/
+.idea/
 out/
 .vscode/
 !.vscode/settings.json

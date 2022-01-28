@@ -1,5 +1,5 @@
-#ifndef SRC_PLAYER_H_
-#define SRC_PLAYER_H_
+#ifndef SRC_PLAYER_H
+#define SRC_PLAYER_H
 
 #include "cursor.h"
 #include "grid.h"
@@ -29,4 +29,4 @@ HitInfo getHitInfo(Player *enemy, Vector2 hitLocation, HitInfo *hits);
 
 HitInfo attack(Player *player, Vector2 hitLocation, Player *enemy);
 
-#endif // SRC_PLAYER_H_
+#endif // SRC_PLAYER_H

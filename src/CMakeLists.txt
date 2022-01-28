@@ -1,3 +1,7 @@
+if(NOT APPLE)
+    set(CURSES_NEED_WIDE true)
+endif()
+
 find_package(Curses REQUIRED)
 
 include_directories(${CURSES_INCLUDE_DIR})
@@ -28,6 +32,10 @@ set(SOURCES
     windows.c
 )
 
-add_executable (${PROJECT_NAME} ${SOURCES})
+add_executable(LavenderTown ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} ${CURSES_LIBRARIES})
+target_link_libraries(LavenderTown ${CURSES_LIBRARIES})
+
+set_target_properties(LavenderTown
+    PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${PLATFORM}"
+)

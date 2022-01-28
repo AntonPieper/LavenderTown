@@ -1,5 +1,5 @@
-#ifndef SRC_SHIP_H_
-#define SRC_SHIP_H_
+#ifndef SRC_SHIP_H
+#define SRC_SHIP_H
 
 #include "util/aabb.h"
 #include "util/vector.h"
@@ -63,4 +63,4 @@ bool isValidShipMove(Ship ships[], AABB bounds, Ship *currentShip,
 					 Ship *newShip);
 bool shipInsideBounds(Ship *ship, AABB bounds);
 
-#endif // SRC_SHIP_H_
+#endif // SRC_SHIP_H

@@ -1,5 +1,6 @@
 {
 // MD002/first-heading-h1/first-header-h1 - First heading should be a top-level heading
   "MD002": false,
+  "MD033": false,
   "MD041": false
 }
