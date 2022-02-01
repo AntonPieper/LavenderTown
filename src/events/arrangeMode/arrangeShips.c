@@ -58,7 +58,7 @@ StateType arrangeShips(StateType incomingType, Player players[2],
 	if(rotateRight)
 		return handleRotation(player, currentShip, rotateRight);
 
-	if(input - '1' >= 0 && input - '1' <= 4) {
+	if(input >= '1' && input <= '5') {
 		return handleSwitchShip(player, input);
 	}
 
@@ -81,8 +81,9 @@ StateType handleMovement(Player *player, Ship *currentShip, int dx, int dy) {
 		newShip.y += dy;
 		if(!shipInsideBounds(&newShip, getGridBounds(player->gridDimensions)))
 			return ARRANGE_SHIPS;
-		currentShip->x += dx;
-		currentShip->y += dy;
+		
+		currentShip->x = newShip.x;
+		currentShip->y = newShip.y;
 
 		player->cursor.x = currentShip->x;
 		player->cursor.y = currentShip->y;
@@ -94,8 +95,9 @@ StateType handleMovement(Player *player, Ship *currentShip, int dx, int dy) {
 							   getGridBounds(player->gridDimensions)))
 			return ARRANGE_SHIPS;
 		player->currentShip = getShipTypeAtPosition(newCursor, player->ships);
-		player->cursor.x += dx;
-		player->cursor.y += dy;
+		
+		player->cursor.x = newCursor.x;
+		player->cursor.y = newCursor.y;
 	}
 	return DRAW_ARRANGE_SHIPS;
 }
@@ -133,21 +135,23 @@ StateType handleGrabShip(Player *player, Ship *currentShip) {
 StateType handleNextPlayer(Player players[2], int *currentPlayerIndex) {
 	players[*currentPlayerIndex].isHoldingShip = false;
 	players[*currentPlayerIndex].currentShip = INVALID;
-	if(*currentPlayerIndex > 0) {
-		int winningPlayerIndex = -1;
-		if(!strcmp(players[0].name, "jo3rn") ||
-		   !strcmp(players[0].name, "franzibmnn"))
-			winningPlayerIndex = 0;
-		else if(!strcmp(players[1].name, "jo3rn") ||
-				!strcmp(players[1].name, "franzibmnn"))
-			winningPlayerIndex = 1;
-		if(winningPlayerIndex != -1) {
-			*currentPlayerIndex = winningPlayerIndex;
-			return END_SCREEN;
-		}
-		return switchPlayerFullScreen(DRAW_ATTACK_MODE, players,
+
+	if(*currentPlayerIndex == 0)
+		return switchPlayerFullScreen(DRAW_ARRANGE_SHIPS, players,
 									  currentPlayerIndex);
+	
+	int winningPlayerIndex = -1;
+	if(!strcmp(players[0].name, "jo3rn") ||
+	   !strcmp(players[0].name, "franzibmnn"))
+		winningPlayerIndex = 0;
+	else if(!strcmp(players[1].name, "jo3rn") ||
+			!strcmp(players[1].name, "franzibmnn"))
+		winningPlayerIndex = 1;
+	if(winningPlayerIndex != -1) {
+		*currentPlayerIndex = winningPlayerIndex;
+		return END_SCREEN;
 	}
-	return switchPlayerFullScreen(DRAW_ARRANGE_SHIPS, players,
+
+	return switchPlayerFullScreen(DRAW_ATTACK_MODE, players,
 								  currentPlayerIndex);
 }
