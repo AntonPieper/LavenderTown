@@ -4,7 +4,7 @@ endif()
 
 find_package(Curses REQUIRED)
 
-include_directories(${CURSES_INCLUDE_DIR})
+include_directories(${CURSES_INCLUDE_DIRS})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
@@ -33,6 +33,10 @@ set(SOURCES
 )
 
 add_executable(LavenderTown ${SOURCES})
+
+message(STATUS "Additional Curses Flags: \"${CURSES_CFlAGS}\"")
+
+target_compile_options(LavenderTown PRIVATE ${CURSES_CFLAGS})
 
 target_link_libraries(LavenderTown ${CURSES_LIBRARIES})
 
