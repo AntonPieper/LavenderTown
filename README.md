@@ -56,23 +56,9 @@ Then you can continue with [Building with CMake](#building-with-cmake)
 
 Windows is not Unix-based. Therefore `ncurses` is not available.
 To circumvent this, you can use [MSYS2](https://www.msys2.org).\
-Download and run the Installer from the site and then
-run the `MSYS2 MSYS` Shortcut from the Start Menu.\
-Inside this terminal, run the following commands:
+Follow the installation instructions on this page.
 
-1. Update the package database and base packages.
-
-    ```sh
-    pacman -Syu
-    ```
-
-2. Install `base-devel`, `gcc`, `cmake` and `ncurses-devel`
-
-    ```sh
-    pacman -S base-devel gcc cmake ncurses ncurses-devel
-    ```
-
-Inside this Terminal, you can continue with [Building with CMake](#building-with-cmake)
+Inside a `MSYS2 MinGW x64` Terminal, you can continue with [Building with CMake](#building-with-cmake)
 
 ### Building with CMake
 

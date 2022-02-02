@@ -1,5 +1,5 @@
-#ifndef SRC_WINDOWS_H
-#define SRC_WINDOWS_H
+#ifndef SRC_PLAYERWINDOWS_H
+#define SRC_PLAYERWINDOWS_H
 
 #include <curses.h>
 
@@ -11,4 +11,4 @@ void overwriteMainWindow(PlayerWindows *windows);
 
 void eraseAllWindows(PlayerWindows *windows);
 
-#endif // SRC_WINDOWS_H
+#endif // SRC_PLAYERWINDOWS_H

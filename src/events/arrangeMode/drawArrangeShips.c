@@ -1,7 +1,7 @@
 #include "events/arrangeMode/drawArrangeShips.h"
+#include "playerWindows.h"
 #include "state.h"
 #include "util/drawing.h"
-#include "windows.h"
 #include <string.h>
 
 StateType drawArrangeShips(StateType incomingType, Player *players,

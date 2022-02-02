@@ -1,6 +1,6 @@
 #include "events/endScreen/endScreen.h"
 #include "input.h"
-#include "windows.h"
+#include "playerWindows.h"
 #include <curses.h>
 
 const int WINNER_ROW = 11;

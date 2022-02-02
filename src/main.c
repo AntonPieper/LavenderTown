@@ -9,10 +9,11 @@
 #include "events/endScreen/endScreen.h"
 #include "locale.h"
 #include "player.h"
+#include "playerWindows.h"
+#include "setLocaleUTF8.h"
 #include "ship.h"
 #include "state.h"
 #include "util/random.h"
-#include "windows.h"
 #include <curses.h>
 #include <string.h>
 
@@ -63,7 +64,7 @@ StateType handleState(StateType incomingType, World *world) {
 }
 
 int main() {
-	setlocale(LC_ALL, "");
+	setLocaleUTF8();
 	srand(getSeed());
 	initscr(); // start curses mode
 

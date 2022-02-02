@@ -3,8 +3,13 @@ if(NOT APPLE)
 endif()
 
 find_package(Curses REQUIRED)
+if(WIN32)
+    set(INCLUDE_DIR ${CURSES_INCLUDE_DIRS}/ncursesw)
+else()
+    set(INCLUDE_DIR ${CURSES_INCLUDE_DIRS})
+endif()
 
-include_directories(${CURSES_INCLUDE_DIRS})
+include_directories(${INCLUDE_DIR})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
@@ -24,17 +29,16 @@ set(SOURCES
     grid.c
     input.c
     player.c
+    playerWindows.c
+    setLocaleUTF8.c
     ship.c
     util/aabb.c
     util/drawing.c
     util/random.c
     util/vector.c
-    windows.c
 )
 
 add_executable(LavenderTown ${SOURCES})
-
-message(STATUS "Additional Curses Flags: \"${CURSES_CFlAGS}\"")
 
 target_compile_options(LavenderTown PRIVATE ${CURSES_CFLAGS})
 

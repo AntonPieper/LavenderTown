@@ -2,8 +2,8 @@
 #define SRC_EVENTS_ATTACKMODE_DRAWSWITCHATTACKINGPLAYER
 
 #include "player.h"
+#include "playerWindows.h"
 #include "state.h"
-#include "windows.h"
 #include <curses.h>
 
 StateType drawSwitchAttackingPlayer(StateType incomingType, Player *players,

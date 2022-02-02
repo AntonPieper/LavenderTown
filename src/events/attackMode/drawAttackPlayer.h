@@ -2,8 +2,8 @@
 #define SRC_EVENTS_ATTACKMODE_DRAWATTACKPLAYER_H
 
 #include "player.h"
+#include "playerWindows.h"
 #include "state.h"
-#include "windows.h"
 #include <curses.h>
 
 void drawPlayerBoard(Player *currentPlayer, WINDOW *primaryWindow,

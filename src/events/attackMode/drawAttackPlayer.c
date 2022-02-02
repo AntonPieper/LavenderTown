@@ -1,6 +1,6 @@
 #include "events/attackMode/drawAttackPlayer.h"
+#include "playerWindows.h"
 #include "util/drawing.h"
-#include "windows.h"
 
 void drawPlayerBoard(Player *currentPlayer, WINDOW *primaryWindow,
 					 Player *enemyPlayer, WINDOW *trackingWindow) {

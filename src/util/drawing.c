@@ -153,16 +153,11 @@ void drawCursor(
 	const unsigned int existingChar =
 		mvwinch(window, drawLocation.y, drawLocation.x);
 	const unsigned int attributes = A_BOLD | existingChar & A_COLOR;
-	unsigned int cursorChar = existingChar & A_CHARTEXT;
-	char cursorString[] = "▓";
-	/*if(cursorChar - '1' <= 4) {
-		cursorString[0] = (char)cursorChar;
-		cursorString[1] = '\0';
-	}*/
+	chtype cursorChar = ACS_BLOCK;
 	drawBorder(window, getSelection(window, gridDimensions, posToAABB(cursor)),
 			   ' ' | attributes);
 	wattron(window, attributes);
-	mvwaddstr(window, drawLocation.y, drawLocation.x, cursorString);
+	mvwaddch(window, drawLocation.y, drawLocation.x, cursorChar);
 	wattroff(window, attributes);
 }
 void drawNameInCenter(WINDOW *window, char name[]) {

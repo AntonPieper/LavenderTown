@@ -1,4 +1,4 @@
-#include "windows.h"
+#include "playerWindows.h"
 
 void overwriteMainWindow(PlayerWindows *windows) {
 	overwrite(windows->info, windows->main);

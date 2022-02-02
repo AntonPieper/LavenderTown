@@ -1,8 +1,8 @@
 #include "events/createMode/drawCreatePlayers.h"
 #include "events/createMode/createPlayers.h"
+#include "playerWindows.h"
 #include "state.h"
 #include "util/drawing.h"
-#include "windows.h"
 #include <string.h>
 
 const char MESSAGE[] = "Enter your name:";
