@@ -18,7 +18,7 @@ static const size_t NEXT_PLAYER_LENGTH =
 
 void *allocateNewStringSize(size_t oldSize, char *string, size_t newSize) {
 	if(oldSize <= 0) {
-		return malloc(newSize);
+		return calloc(1, newSize);
 	}
 	return realloc(string, newSize);
 }
